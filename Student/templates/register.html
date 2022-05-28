@@ -1,0 +1,61 @@
+{% extends 'base/base.html'%}
+{% load static %}
+{% block title %}Register{% endblock title %}
+
+{% block icon %}
+<link rel="shortcut icon" href="{% static 'img/register.ico' %}" type="image/x-icon">
+{% endblock icon %}
+
+{% block link %}
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+{% endblock link %}
+    
+{% block content %}
+
+
+{% for message in messages %}
+
+<h1>{{message}}</h1>
+
+{% endfor %}
+
+
+
+<div class="container-fluid mt-1 p-3">
+
+<div class="row">
+    {% include "siteDetails.html" %}
+    <div class="col-sm-6">
+        <div class="container-fluid form">
+            <form action="" method="post" novalidate>
+                {% csrf_token %}
+                
+                <div class="row p-5">
+                    {% for fields in form %}
+                    <div class="col-sm-8 mt-3 offset-sm-1">
+                        {{fields.label_tag}}
+                        {{fields}}
+            
+                        <span class="deferrors">{{fields.errors|striptags}}</span>
+                    </div>
+                    {% endfor %}
+                    <div class="col-sm-8 text-center mt-5 offset-sm-1">
+                        <input type="submit" value="Create User" class="btn btn-success">
+                    </div>
+                    <div class="col-sm-8 text-center mt-5 offset-sm-1">
+                        <p>Already A user ? <a href="{% url 'signin' %}">Login</a></p>
+                    </div>
+                    
+                </div>
+                
+            
+            
+            </form>
+        </div>
+    </div>
+
+</div>
+
+</div>
+{% endblock content %}
+    

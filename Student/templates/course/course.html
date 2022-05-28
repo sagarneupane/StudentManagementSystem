@@ -1,0 +1,40 @@
+{% extends '../profile.html' %}
+{% load static %}
+
+
+{% block anotherlink %}
+    <link rel="stylesheet" href="{% static 'css/course/course.css' %}">
+{% endblock anotherlink %}
+    
+
+{% block profcontent %}
+
+
+<div class="container universitybg" style="background:url('{% static 'img/background/universitybg.jpg' %}');background-repeat:no-repeat;background-size:cover;">
+    <div class="row mt-3">
+        {% for course in courses %}
+        <div class="offset-sm-1 col-sm-5 courseDetails mb-3">
+            <blockquote class="blockquote text-center">
+                <p class="mb-4 h3">{{course.course_name}}</p>
+                <footer class="blockquote-footer"><cite title="Source Title">{{course.course_code}}</cite></footer>
+              </blockquote>
+            <p class="course_description">{{course.course_description}}
+                <a href="{{course.course_url}}" target="_blank">Learn More</a>
+            </p>
+            
+            <p>See More Details About Course <a href="{% url 'coursedetails' course.id %}">Click Here</a></p>
+            
+            <span class="mr-3"> It is affiliated to 
+            {% for university in course.university_affiliation.all %}
+                
+                   <a href="{{university.university_url}}" target="_blank">{{university}}</a>
+            {% endfor %}
+        .</span>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+
+{% endblock profcontent %}

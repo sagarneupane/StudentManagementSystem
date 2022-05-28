@@ -1,0 +1,46 @@
+{% extends 'profile.html' %}{% load static %}
+
+
+
+{% block title %}Edit Profile{% endblock title %}
+{% block icon %}
+        <link rel="shortcut icon" href="{% static 'img/editprofile.ico' %}" type="image/x-icon">
+{% endblock icon %}
+
+
+
+{% block anotherlink %}
+        <link rel="stylesheet" href="{% static 'css/profile/editprofile.css' %}">
+{% endblock anotherlink %}
+        
+
+
+
+
+{% block profcontent %}
+
+<div class="container editprofile">
+        <table class="table">
+                <thead class="text-center"><span class="display-4">Edit Profile</span></thead>
+                <form action="" method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                <tr>
+                        <th>
+                            {{ field.label_tag }}
+                        </th>
+                        <td>
+                                {{field}}
+                        </td>
+                </tr>
+
+                {% endfor %}
+                <tr>
+                        <th colspan="2" class="text-center"><input type="submit" value="Update" class="btn btn-info"></th>
+                </tr>
+        </form>
+        </table>
+</div>
+
+
+{% endblock profcontent %}

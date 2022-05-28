@@ -1,0 +1,47 @@
+{% extends '../profile.html' %}
+{% load static %}
+
+
+{% block anotherlink %}
+    <link rel="stylesheet" href="{% static 'css/course/course.css' %}">
+
+{% endblock anotherlink %}
+    
+
+{% block profcontent %}
+
+
+<div class="container universitybg" style="background:url('{% static 'img/background/universitybg.jpg' %}');background-repeat:no-repeat;background-size:cover;">
+    <div class="row mt-3">
+        
+            <div class="col-sm-12">
+                {% for sem in semester %}
+                
+                <div class="container semester mb-3">
+                    <div class="row">
+                        <h3 class="text-center mt-1">
+                            Subjects in {{sem.0}}
+                        </h3>
+                        
+                        {% for subject in subjects %}
+                            {% if subject.semester == sem.0 %}
+                                <div class=" col-sm-5 subjects m-4">
+                                    <h4>{{subject.subject_name}}</h4>
+                                    <p class="text-truncate">{{subject.subject_details}}</p>
+                                    <a href="{% url 'subjectdetail' subject.id %}"><p>More About Subject</p></a>
+                                </div>
+                            {%endif%}
+                        {% endfor %}
+                        
+                    </div> 
+                </div>
+                {% endfor %}
+            </div>
+
+        
+    </div>
+
+</div>
+
+
+{% endblock profcontent %}

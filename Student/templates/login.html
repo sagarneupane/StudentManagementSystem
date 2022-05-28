@@ -1,0 +1,68 @@
+{% extends 'base/base.html'%}
+{% load static %}
+{% block title %}Login{% endblock title %}
+
+{% block icon %}
+<link rel="shortcut icon" href="{% static 'img/login.ico' %}" type="image/x-icon">
+{% endblock icon %}
+
+{% block link %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+<link rel="stylesheet" href="{% static 'css/register.css' %}">
+
+{% endblock link %}
+
+
+{% block content %}
+
+<div class="container-fluid mt-1 p-3">
+ 
+    <div class="row">
+        
+        {% include "siteDetails.html" %}
+        <div class="col-sm-6">
+            <div class="container-fluid form">
+                <form action="" method="post" novalidate>
+                    {% csrf_token %}
+                   
+                    <div class="row p-5">
+                        {% if form.non_field_errors %}
+                        <div class="col-sm-8 mt-3 offset-sm-1">
+                            {% for error in form.non_field_errors %}
+                            <span class="deferrors">
+                                {{error | striptags}}
+                            </span>
+                            {% endfor %}
+                        </div>
+                       
+                        {% endif %}
+                       
+                        {% for fields in form %}
+                        <div class="col-sm-8 mt-3 offset-sm-1">
+                            {{fields.label_tag}}
+                            {{fields}}
+                
+                            <span class="deferrors">{{fields.errors|striptags}}</span>
+                        </div>
+                        {% endfor %}
+                        <div class="col-sm-8 text-center mt-5 offset-sm-1">
+                            <input type="submit" value="Login" class="btn btn-success">
+                        </div>
+                        <div class="col-sm-8 text-center mt-5 offset-sm-1">
+                            <p>Not A user ? <a href="{% url 'signup' %}">Register</a></p>
+                        </div>
+                        
+                    </div>
+                    
+                
+                
+                </form>
+            </div>
+        </div>
+    
+    </div>
+    
+    </div>
+   
+{% endblock content %}
+    

@@ -1,0 +1,46 @@
+{% extends '../profile.html' %}
+{% load static %}
+
+
+{% block anotherlink %}
+    <link rel="stylesheet" href="{% static 'css/course/course.css' %}">
+
+{% endblock anotherlink %}
+    
+
+{% block profcontent %}
+
+
+<div class="container universitybg" style="background:url('{% static 'img/background/universitybg.jpg' %}');background-repeat:no-repeat;background-size:cover;">
+    <div class="row mt-3">
+        
+          
+        <div class="container subjectdetails">
+
+        <table class="table table-striped">
+
+            {% for field,subject in subject_field_dict.items %}
+            <tr>
+                <th>{{field}}</th>
+                
+                {% if field == "course_detail_file" %}
+                    <td><a href="{{subject.url}}" target="_blank" class="btn btn-info">Download</a></td>
+                {% else %}
+                    <td>{{subject}}</td>
+                {% endif %}
+                
+            </tr>
+            {%endfor%} 
+        </table>
+
+        </div>  
+                
+    
+
+        
+    </div>
+
+</div>
+
+
+{% endblock profcontent %}

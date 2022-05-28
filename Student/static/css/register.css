@@ -1,0 +1,58 @@
+.form .row {
+    box-shadow: 0 0 5px 8px grey;
+    background: linear-gradient(80deg, rgba(255, 137, 181, 0.65), rgb(155, 253, 199));
+    font-variant: small-caps;
+}
+
+.form .row label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 1rem;
+}
+
+.form .row .deferrors {
+    display: block;
+    color: red;
+    margin-top: 10px;
+    /* font-size: 2px; */
+}
+
+@import url('https://fonts.googleapis.com/css2?family=PT+Serif&display=swap');
+.siteDetails {
+    box-shadow: 0 2px 6px 5px grey;
+    padding: 5px;
+}
+
+.detailsInfo {
+    border: 2px solid grey;
+    font-family: 'PT Serif', serif;
+}
+
+.detailsInfo p {
+    font-size: 1.5rem;
+}
+
+.yelloBg {
+    background-color: yellow;
+    margin: 2px;
+    font-weight: bolder;
+    font-size: 1.8rem;
+    padding: 2px;
+}
+
+.detailsInfo p::first-letter {
+    font-size: 5rem;
+}
+
+.ullist li::first-letter {
+    font-size: 2rem;
+}
+
+.ullist li {
+    font-size: 1rem;
+    letter-spacing: 1px;
+}
+
+.ullist li:nth-child(even) {
+    font-weight: bold;
+}

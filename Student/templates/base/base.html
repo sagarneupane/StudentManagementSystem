@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+    <title> |
+    {% block title %}
+        
+    {% endblock title %}
+        </title>
+    
+    {% block icon %}
+        
+    {% endblock icon %}
+        
+    {% block link %}{% endblock link %}
+    {% include 'base/link.html' %}
+   
+</head>
+<body>
+    <!-- Heading Of the  Main Webpage-->
+    <div class="container-fluid baseheading">
+        <h1 class="display-2">Welcome to Student Management System</h1>
+    </div>
+    <!-- End of the Heading Of the Page -->    
+
+
+    <!--Content of the Main Web page -->
+        {% block content %}
+        {% endblock %}
+
+  <!--End of the content -->
+
+
+    <!-- Footer of the main WebPage -->
+    <div class="footerfixed container-fluid">
+        <p>Copyright © 2022 all right reserved</p>
+    </div> 
+     <!-- End of the footer of the page -->
+</body>
+</html>

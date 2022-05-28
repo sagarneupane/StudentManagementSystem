@@ -1,0 +1,82 @@
+.profileshow {
+    margin-top: 5px;
+    padding: 10px 10px 10px 10px;
+    text-align: center;
+    box-shadow: 2px 2px 4px 2px grey;
+    position: relative;
+}
+
+.profileshow span i {
+    font-size: 25px;
+}
+
+.profileshow span {
+    color: white;
+    font-variant: small-caps;
+}
+
+.myprofile {
+    position: absolute;
+    transition: 0.2s ease;
+    background: linear-gradient(150deg, rgba(245, 63, 63, 1), rgb(251, 174, 92));
+    overflow: hidden;
+    box-shadow: 1px 1px 5px 1px grey;
+    height: 150px;
+    width: 200px;
+    text-align: center;
+    left: -5%;
+    top: 91%;
+    display: none;
+}
+
+.myprofile ul {
+    margin: 5px;
+    list-style-type: none;
+}
+
+.myprofile ul a {
+    text-decoration: none;
+    color: white;
+}
+
+.myprofile ul a li {
+    list-style: none;
+    padding: 5px;
+    margin: 5px;
+    font-size: 1rem;
+    transition: 0.5s ease-in-out;
+}
+
+.myprofile ul li i {
+    padding: 2px;
+    margin-right: 2px;
+    font-size: 20px;
+}
+
+.myprofile ul li:hover {
+    background: linear-gradient(30deg, rgba(255, 120, 164, 0.93), rgba(255, 120, 127, 0.93));
+    transform: scale(1.1);
+}
+
+.profileshow:hover .myprofile {
+    display: block;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.profileshow:hover {
+    cursor: pointer;
+}
+
+.profileshow:hover .profileshow span i {
+    font-size: 30px;
+    color: black;
+}
+
+.onepageprofile {
+    height: auto;
+    width: 100%;
+    padding: 0;
+    background: linear-gradient(20deg, rgba(242, 148, 204, 0.663), rgba(247, 132, 163, 0.87));
+    margin-top: 0.8%;
+}

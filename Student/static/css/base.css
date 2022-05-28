@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Odibee+Sans&family=Tapestry&display=swap');
+.baseheading {
+    background: linear-gradient(90deg, rgba(255, 121, 38, 0.6), rgba(255, 38, 10, 0.6));
+    padding: 25px;
+    text-align: center;
+    font-variant: small-caps;
+    font-family: 'Odibee Sans', cursive;
+    box-shadow: 0 2px 4px 6px grey;
+}
+
+.footerfixed {
+    width: 100hw;
+    background: linear-gradient(120deg, rgba(255, 114, 0, 1), rgba(255, 0, 35, 1));
+    text-align: center;
+    font-size: 1.2rem;
+    font-variant: small-caps;
+    letter-spacing: 1px;
+    color: wheat;
+    /* margin: 50px; */
+    position: relative;
+    /* left: 0; */
+    line-height: 100px;
+    /* bottom: 10%; */
+}
+
+.footerfixed p {
+    padding: 10px;
+}

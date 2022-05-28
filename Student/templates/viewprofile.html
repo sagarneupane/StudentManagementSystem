@@ -1,0 +1,74 @@
+{% extends 'profile.html' %}
+
+{% load static %}
+
+{% block title %} View Profile {% endblock title %}
+
+
+{% block icon %}
+        <link rel="shortcut icon" href="{% static 'img/viewprof1.ico' %}" type="image/x-icon">
+{% endblock icon %}
+    
+{% block anotherlink %}
+<link rel="stylesheet" href="{% static 'css/profile/viewprofile.css' %}">
+{% endblock anotherlink %}
+
+
+{% block profcontent %}
+<div class="container viewprofcotain">
+
+
+<table class="table table-bordered">
+    <thead>
+        <h1 class="display-3">User</h1>
+        {% if user.first_name == "" and user.last_name == "" %}
+        <h2>{{user.username}}</h2>
+        {% else %}
+        <h2>{{user.first_name}} {{user.last_name}}</h2>
+        {% endif %}
+    </thead>
+    {% for datadesc,data in userdata.items %}
+   
+    <tr>
+        
+        {% if datadesc == "groups" %}
+        <th>{{datadesc}}</th> 
+        {% for group in user.groups.all %}
+            {% if group is None %}
+            <td><span id="notset"> Not Set</span></td>
+        {%else%}
+         <td>{{group}}</td>
+         {% endif %}
+         {% endfor %}
+        
+         {% elif datadesc == "user_permissions" or datadesc == "id" %}
+         {% comment %} {% for permission in user.user_permissions.all %}
+         <td>{{permission}}</td> {% endcomment %}
+         {% comment %} {% endfor %} {% endcomment %}
+        {% else %}
+        <th>{{datadesc}}</th>
+
+
+
+        {% if data == "" %}
+        <td> <span id="notset"> Not Set</span></td>
+
+        {% elif data == True %}
+         <td class="correct"> <i class="fa-solid fa-circle-check" id="correct"></i> </td>
+        {% elif data == False %}
+        <td class="wrong"><i class="fa-solid fa-circle-xmark" id="wrong"></i></td>
+        {% else %}
+        <td><span id="normaldata">{{data}}</span></td>
+        {% endif %}
+
+        {% endif %}
+
+        
+
+
+    </tr>
+    {% endfor %}
+</table>
+
+</div>
+{% endblock profcontent %}

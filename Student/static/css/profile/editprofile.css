@@ -1,0 +1,32 @@
+.editprofile {
+    background: linear-gradient(60deg, rgba(245, 47, 157, 0.89), rgba(245, 47, 107, 0.89));
+    padding: 14px;
+}
+
+.custominput {
+    border: none;
+    /* background: linear-gradient(120deg, rgba(245, 40, 145, 0.8), rgba(255, 22, 81, 0.8)); */
+    background: transparent;
+    border-bottom: 2px dashed black;
+    padding: 8px;
+    color: white;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 1.5rem;
+    width: 50%;
+}
+
+input:focus {
+    outline: none;
+}
+
+.custominput[type=text],
+.custominput[type=email] {
+    margin-left: 50px;
+    padding: 3px;
+}
+
+.custominput::placeholder {
+    font-family: cursive;
+    font-size: 20px;
+    font-variant: small-caps;
+}

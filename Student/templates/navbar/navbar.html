@@ -1,0 +1,27 @@
+
+{% load static %}
+<div class="border-dark navbarside">
+    <div class="navbar">
+        <ul>
+            
+            <a href="{% url 'intoassignment' %}"><li><i class="fa-solid fa-envelope-open-text"></i>Assignment</li></a>
+            {% for group in request.user.groups.all %}
+            {% if group.name == 'Teacher'  %}
+            <a href=""><li><i class="fa-solid fa-person-chalkboard"></i>Teacher</li></a>
+            
+            {% elif group.name == "Student" %}
+            <a href=""><li><i class="fa-solid fa-graduation-cap"></i>Student</li></a>
+            {% elif group.name == "Admin" %}
+            <a href=""><li><i class="fa-solid fa-graduation-cap"></i>Student</li></a>
+            <a href=""><li><i class="fa-solid fa-person-chalkboard"></i>Teacher</li></a>
+            {%else%}
+            {% endif %}
+            {% endfor %}
+            <a href=""><li><i class="fa-solid fa-hand-holding-dollar"></i></i>Accounts</li></a>
+            <a href="{% url 'viewCourse' %} "><li><img src="{% static 'img/course.png' %}" alt="" height="35px" width="35px">   Course</li></a>
+            <a href=""><li><i class="fa-solid fa-business-time"></i>Others</li></a>
+            
+        </ul>
+    </div>
+  
+</div>

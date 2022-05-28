@@ -1,0 +1,16 @@
+{% extends 'base/base.html'%}
+{% load static %}
+{% block title %}Dashboard{% endblock title %}
+
+
+{% block icon %}
+<link rel="shortcut icon" href="{% static 'img/earth.gif' %}" type="image/gif">
+{% endblock icon %}
+    
+
+{% block content %}
+    <h1>Hi {{request.user.username}} How are You Welcome to Interface</h1>
+    <a href="{% url 'signin' %}" class="btn btn-info">Login</a>
+    <a href="{% url 'signup' %}" class="btn btn-primary">Register</a>
+{% endblock content %}
+    
