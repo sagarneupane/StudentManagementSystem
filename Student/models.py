@@ -49,7 +49,7 @@ class Stu_Subject(models.Model):
     practical_marks= models.IntegerField(validators=[MinValueValidator(0)])
     practical_pass_marks= models.IntegerField(validators=[MinValueValidator(0)])
     semester= models.CharField(choices=semester,max_length=20)
-    course_related = models.ForeignKey(on_delete=models.CASCADE, to='Student.course')
+    course_related = models.ForeignKey(ModelUniversity,on_delete=models.CASCADE)
     course_detail_file = models.FileField(upload_to="files/",default=None)
     def __str__(self):
         return self.subject_code
