@@ -1,0 +1,20 @@
+.subjects {
+    background: linear-gradient(to bottom left, rgba(245, 39, 209, 0.5) 30%, rgba(124, 247, 243, 0.5) 70%);
+}
+
+.eachsubjects {
+    background: linear-gradient(to top right, rgba(242, 70, 100, 0.5) 50%, rgba(124, 255, 141, 0.5) 25%);
+    transform: skew(-2deg) translate(40px, 0);
+    box-shadow: -1px -5px 5px 7px rgba(119, 202, 247, 0.8);
+    transition: 0.5s ease;
+}
+
+.eachsubjects h4 {
+    transform: skew(0deg) translate(40px, 0);
+}
+
+.eachsubjects:hover {
+    transform: skew(0deg) translate(20px, 0);
+    box-shadow: -1px -5px 5px 7px black;
+    cursor: pointer;
+}

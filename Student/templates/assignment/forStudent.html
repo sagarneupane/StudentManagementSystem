@@ -1,0 +1,31 @@
+<div class="container subjects">
+    <h1 class="text-center">Check Assignment For Subjects</h1>
+    <div class="row">
+        {% for subjects in data_recieved %}
+        {% for subject in subjects %}
+        <div class="m-4 col-sm-5 eachsubjects">
+            <h4 class="text-center">{{subject.subject_name}}</h4>
+            <table class="table table-bordered">
+                <tr>
+                    <th>Subject Sem</th>
+                    <td>{{subject.semester}}</td>
+                </tr>
+                <tr>
+                    <th>Subject Code</th>
+                    <td>{{subject.subject_code}}</td>
+                </tr>
+                <tr>
+                    <th>Course</th>
+                    <td>{{subject.course_related}}</td>
+                </tr>
+                <tr>
+                    <th>Complete Task</th>
+                    <td><a href="">Click here To View Assignment</a></td>
+                </tr>
+            </table>
+        </div>
+    
+        {% endfor %}
+        {% endfor %}
+    </div>
+</div>

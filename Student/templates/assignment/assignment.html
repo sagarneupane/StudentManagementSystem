@@ -6,7 +6,16 @@
 <link rel="stylesheet" href="{% static 'css/assignment/assignment.css' %}">
 {% endblock anotherlink %}
 
-{% block profcontent %}
 
-<h1>Hy I am Assignment</h1>
+{% block profcontent %}
+{% for group in request.user.groups.all %}
+{% if group.name == "Teacher"%}
+{% include 'assignment/forTeacher.html' %}
+{% elif group.name == "Student" %}
+{% include 'assignment/forStudent.html' %}
+{%endif %}
+{% endfor %}
 {% endblock profcontent %}
+
+
+

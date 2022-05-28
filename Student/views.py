@@ -173,16 +173,17 @@ def IntoAssignment(request):
                 for teacher in teachers:
                     teacher_subject = teacher.subject_taught.all()
                     for subject in teacher_subject:
-                        subjects.append(Stu_Subject.objects.all().filter(subject_name=subject))
+                        sub = Stu_Subject.objects.all().filter(subject_code=subject)
+                        subjects.append(sub)
+                        # print(Stu_Subject.objects.all().filter(subject_code=subject))
             
             if group.name == "Student":
                 students = Student_Details.objects.all().filter(user=request.user.id)
                 for student in students:
                     student_course = student.course_enrolled
-                    course = Stu_Subject.objects.all().filter(course_related=student_course)
-                    for co in course:
-                        print(co)
-        
+                    subject = Stu_Subject.objects.all().filter(course_related=student_course,semester=student.semester)
+                    subjects.append(subject)
+        print(subjects)
         return render(request,'assignment/assignment.html',{"data_recieved":subjects})
     else:
         return redirect("signin")
