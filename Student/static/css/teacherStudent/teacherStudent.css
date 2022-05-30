@@ -43,3 +43,16 @@
 .teacherdetails table .name:hover {
     background: linear-gradient(to top right, rgba(48, 229, 253, 0.8), rgba(255, 135, 193, 0.8));
 }
+
+.emailname {
+    background-color: rgb(255, 255, 255);
+    border: 2px solid grey;
+    padding: 2px;
+    box-shadow: 0 0 1px 1px grey;
+    border-radius: 1px 2px 2px 1px;
+    font-family: monospace;
+    margin: 5px;
+    padding: 10px;
+    display: block;
+    text-align: center;
+}

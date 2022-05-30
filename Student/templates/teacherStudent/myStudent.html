@@ -4,7 +4,7 @@
 {% block title %}My Teacher{% endblock title %}
 
 {% block anotherlink %}
-<link rel="stylesheet" href="{% static 'css/teacherStudent/TeacherStudent.css' %}">
+<link rel="stylesheet" href="{% static 'css/teacherStudent/teacherStudent.css' %}">
 {% endblock anotherlink %}
 
 
@@ -14,14 +14,70 @@
 
 <div class="container myteacher">
 
-    <table class="table table-bordered">
-
-        <th>
-            <th>Name</th>
-            <td>Samir Neupane</td>
-        </th>
-
-    </table>
-
+    <div class="row p-2">
+        <h1 class="text-center">Student's Related To You</h1>
+   
+        {% for studentdetail in students %}
+        <div class="col-sm-5 m-4 p-3 teacherdetails">
+                <table class="table table-bordered">
+                    <tr>
+                        <th>
+                            Name
+                        </th>
+                        <td>
+                           <span class="name">{{studentdetail.user.first_name}} {{studentdetail.user.last_name}} </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Email
+                        </th>
+                        <td>
+                           <span class="emailname">{{studentdetail.user.email}}</span>
+                        </td>
+                    </tr>
+                
+                    <tr>
+                        <th>
+                            Address
+                        </th>
+                        <td>
+                            <span class="subjectname">{{studentdetail.address}}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Image:
+                        </th>
+                        <td>
+                            <a href="{{studentdetail.image.url}}" target="_blank"> 
+                                <span class="subjectname">
+                                    <img src="{{studentdetail.image.url}}" alt="" height="150px" width="150px">
+                                </span>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Course enrolled
+                        </th>
+                        <td>
+                            
+                            <span class="subjectname">{{studentdetail.course_enrolled}}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Semester
+                        </th>
+                        <td>
+                            
+                            <span class="subjectname">{{studentdetail.semester}}</span>
+                        </td>
+                    </tr>
+                </table>
+        </div>
+        {%endfor%}
 </div>
+
 {% endblock %}

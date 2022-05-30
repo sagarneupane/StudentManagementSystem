@@ -213,8 +213,17 @@ def myTeacher(request):
     
 def myStudent(request):
     if request.user.is_authenticated:
-        
-        return render(request,"teacherStudent/myStudent.html")
-
+        for group in request.user.groups.all():
+            if group.name == "Teacher":
+                
+                teacher = Teacher_Details.objects.all().filter(user=request.user.id)
+                for teacherdetail in teacher:
+                    subject_list = []
+                    for subjects in teacherdetail.subject_taught.all():
+                        subject_list.append(subjects.course_related)
+                    students = Student_Details.objects.filter(course_enrolled__in = subject_list).distinct()
+                return render(request,"teacherStudent/myStudent.html",{"students":students})
+        else:
+            return redirect("myTeacher")
     else:
         return redirect("signin")
