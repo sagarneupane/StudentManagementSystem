@@ -200,22 +200,22 @@ def myTeacher(request):
                     subject = Stu_Subject.objects.all().filter(semester=sem,course_related=course)
                     subjects = []
                     for subjectdetail in subject:
-                        subjects.append(subjectdetail.id)
-                    # print(subjects)   
+                        subjects.append(subjectdetail.id) 
                     teacher = Teacher_Details.objects.filter(subject_taught__in = subjects).distinct()
-                    # print(teacher)
                 return render(request,"teacherStudent/myTeacher.html",{"teachers":teacher})
+            elif group.name == "Admin":
+                teacher = Teacher_Details.objects.all()
+                return render(request,"teacherStudent/myTeacher.html",{"teachers":teacher})   
             else:
                 return redirect("myStudent")
-
     else:
         return redirect("signin")
     
+        
 def myStudent(request):
     if request.user.is_authenticated:
         for group in request.user.groups.all():
             if group.name == "Teacher":
-                
                 teacher = Teacher_Details.objects.all().filter(user=request.user.id)
                 for teacherdetail in teacher:
                     subject_list = []
@@ -223,7 +223,11 @@ def myStudent(request):
                         subject_list.append(subjects.course_related)
                     students = Student_Details.objects.filter(course_enrolled__in = subject_list).distinct()
                 return render(request,"teacherStudent/myStudent.html",{"students":students})
-        else:
-            return redirect("myTeacher")
+            elif group.name == "Admin":
+                students = Student_Details.objects.all()
+                return render(request,"teacherStudent/myStudent.html",{"students":students}) 
+            else:
+                return redirect("myTeacher")
     else:
         return redirect("signin")
+
