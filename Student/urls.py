@@ -12,4 +12,6 @@ urlpatterns = [
     path('coursedetails/<int:id>',views.coursedetails,name="coursedetails"),
     path('subjectdetails/<int:id>',views.subjectdetail,name="subjectdetail"),
     path('intoassignment',views.IntoAssignment,name="intoassignment"),
+    path('teacherStudent',views.myTeacher,name="myTeacher"),
+    path('myStudent',views.myStudent,name="myStudent"),
 ]

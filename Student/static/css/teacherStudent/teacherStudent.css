@@ -1,0 +1,8 @@
+.myteacher {
+    background: linear-gradient(rgba(39, 243, 245, 0.63), rgba(111, 242, 244, 0.8));
+}
+
+.teacherdetails {
+    transform: translate(50px, 0);
+    background: linear-gradient(to top right, rgba(45, 254, 69, 0.705), rgba(247, 7, 127, 0.8));
+}

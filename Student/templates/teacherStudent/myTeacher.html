@@ -1,0 +1,71 @@
+
+{% extends '../profile.html' %}
+{% load static %}
+{% block title %}My Teacher{% endblock title %}
+
+{% block anotherlink %}
+<link rel="stylesheet" href="{% static 'css/teacherStudent/TeacherStudent.css' %}">
+{% endblock anotherlink %}
+
+
+{% block profcontent %}
+
+
+
+<div class="container myteacher">
+
+    <div class="row p-2">
+        <h1 class="text-center">Teacher Related To You</h1>
+   
+        {% for teacherdetail in teachers %}
+        <div class="col-sm-5 m-4 p-3 teacherdetails">
+                <table class="table table-bordered">
+                    <tr>
+                        <th>
+                            Name
+                        </th>
+                        <td>
+                            {{teacherdetail.user.first_name}} {{teacherdetail.user.last_name}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Email
+                        </th>
+                        <td>{{teacherdetail.user.email}}</td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Email
+                        </th>
+                        <td>{{teacherdetail.user.email}}</td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Address
+                        </th>
+                        <td>
+                            {{teacherdetail.address}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Image:
+                        </th>
+                        <td>
+                            <a href="{{teacherdetail.image.url}}" target="_blank"><img src="{{teacherdetail.image.url}}" alt="" height="150px" width="150px"></a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+
+                        </th>
+                    </tr>
+                </table>
+        </div>
+        {%endfor%}
+</div>
+    
+
+</div>
+{% endblock %}

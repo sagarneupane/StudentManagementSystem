@@ -188,3 +188,30 @@ def IntoAssignment(request):
     else:
         return redirect("signin")
         
+        
+        
+def myTeacher(request):
+    if request.user.is_authenticated:
+        student = Student_Details.objects.all().filter(user=request.user.id)
+        for detail in student:
+            sem = detail.semester
+            course = detail.course_enrolled
+            subject = Stu_Subject.objects.all().filter(semester=sem,course_related=course)
+            subjects = []
+            for subjectdetail in subject:
+                subjects.append(subjectdetail.id)
+            # print(subjects)   
+            teacher = Teacher_Details.objects.filter(subject_taught__in = subjects).distinct()
+            # print(teacher)
+        return render(request,"teacherStudent/myTeacher.html",{"teachers":teacher})
+
+    else:
+        return redirect("signin")
+    
+def myStudent(request):
+    if request.user.is_authenticated:
+        
+        return render(request,"teacherStudent/myStudent.html")
+
+    else:
+        return redirect("signin")

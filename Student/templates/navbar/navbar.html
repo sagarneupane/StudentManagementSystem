@@ -7,14 +7,14 @@
             <a href="{% url 'intoassignment' %}"><li><i class="fa-solid fa-envelope-open-text"></i>Assignment</li></a>
             {% for group in request.user.groups.all %}
             {% if group.name == 'Teacher'  %}
-            <a href=""><li><i class="fa-solid fa-graduation-cap"></i>My Students</li></a>
+            <a href="{% url 'myStudent' %}"><li><i class="fa-solid fa-graduation-cap"></i>My Students</li></a>
             
             
             {% elif group.name == "Student" %}
-            <a href=""><li><i class="fa-solid fa-person-chalkboard"></i>My Teacher's</li></a>
+            <a href="{% url 'myTeacher' %}"><li><i class="fa-solid fa-person-chalkboard"></i>My Teacher's</li></a>
             {% elif group.name == "Admin" %}
-            <a href=""><li><i class="fa-solid fa-graduation-cap"></i>Student</li></a>
-            <a href=""><li><i class="fa-solid fa-person-chalkboard"></i>Teacher</li></a>
+            <a href="{% url 'myStudent' %}"><li><i class="fa-solid fa-graduation-cap"></i>Student</li></a>
+            <a href="{% url 'myTeacher' %}"><li><i class="fa-solid fa-person-chalkboard"></i>Teacher</li></a>
             {%else%}
             {% endif %}
             {% endfor %}

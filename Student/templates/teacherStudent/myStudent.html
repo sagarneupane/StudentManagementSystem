@@ -1,0 +1,27 @@
+
+{% extends '../profile.html' %}
+{% load static %}
+{% block title %}My Teacher{% endblock title %}
+
+{% block anotherlink %}
+<link rel="stylesheet" href="{% static 'css/teacherStudent/TeacherStudent.css' %}">
+{% endblock anotherlink %}
+
+
+{% block profcontent %}
+
+
+
+<div class="container myteacher">
+
+    <table class="table table-bordered">
+
+        <th>
+            <th>Name</th>
+            <td>Samir Neupane</td>
+        </th>
+
+    </table>
+
+</div>
+{% endblock %}
