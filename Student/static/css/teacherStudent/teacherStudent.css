@@ -6,3 +6,40 @@
     transform: translate(50px, 0);
     background: linear-gradient(to top right, rgba(45, 254, 69, 0.705), rgba(247, 7, 127, 0.8));
 }
+
+.subjectname {
+    background-color: rgb(255, 255, 255);
+    border: 2px solid grey;
+    padding: 2px;
+    box-shadow: 0 0 1px 1px grey;
+    border-radius: 1px 2px 2px 1px;
+    font-family: monospace;
+    margin: 5px;
+    display: block;
+    text-align: center;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif&family=Tiro+Bangla&display=swap');
+.teacherdetails table th {
+    font-size: 1.5rem;
+    font-family: 'Noto Serif', serif;
+}
+
+.teacherdetails table td {
+    padding: 15px;
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+.teacherdetails table .name {
+    background: linear-gradient(to top left, rgba(240, 70, 152, 0.8), rgba(109, 255, 245, 0.845));
+    border: 2px solid grey;
+    padding: 5px;
+    font-variant: small-caps;
+    box-shadow: 0 0 2px 2px grey;
+    transition: 5s ease;
+}
+
+.teacherdetails table .name:hover {
+    background: linear-gradient(to top right, rgba(48, 229, 253, 0.8), rgba(255, 135, 193, 0.8));
+}

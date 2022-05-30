@@ -15,7 +15,7 @@
 <div class="container myteacher">
 
     <div class="row p-2">
-        <h1 class="text-center">Teacher Related To You</h1>
+        <h1 class="text-center">Teacher's Related To You</h1>
    
         {% for teacherdetail in teachers %}
         <div class="col-sm-5 m-4 p-3 teacherdetails">
@@ -25,7 +25,7 @@
                             Name
                         </th>
                         <td>
-                            {{teacherdetail.user.first_name}} {{teacherdetail.user.last_name}}
+                           <span class="name">{{teacherdetail.user.first_name}} {{teacherdetail.user.last_name}} </span>
                         </td>
                     </tr>
                     <tr>
@@ -34,12 +34,7 @@
                         </th>
                         <td>{{teacherdetail.user.email}}</td>
                     </tr>
-                    <tr>
-                        <th>
-                            Email
-                        </th>
-                        <td>{{teacherdetail.user.email}}</td>
-                    </tr>
+                
                     <tr>
                         <th>
                             Address
@@ -58,8 +53,13 @@
                     </tr>
                     <tr>
                         <th>
-
+                            Subject Taught
                         </th>
+                        <td>
+                            {% for subject in teacherdetail.subject_taught.all %}
+                            <span class="subjectname">{{subject.subject_name}}</span>
+                            {% endfor %}
+                        </td>
                     </tr>
                 </table>
         </div>

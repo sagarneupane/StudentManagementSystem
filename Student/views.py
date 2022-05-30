@@ -79,7 +79,6 @@ def viewProfile(request,id=0):
     if request.user.is_authenticated:
         users = User.objects.filter(id=request.user.id)
         fields  = [f.name for f in User._meta.get_fields()]
-        
         fields.pop(0)
         fields.pop(0)
         fields.pop(0)
@@ -192,18 +191,22 @@ def IntoAssignment(request):
         
 def myTeacher(request):
     if request.user.is_authenticated:
-        student = Student_Details.objects.all().filter(user=request.user.id)
-        for detail in student:
-            sem = detail.semester
-            course = detail.course_enrolled
-            subject = Stu_Subject.objects.all().filter(semester=sem,course_related=course)
-            subjects = []
-            for subjectdetail in subject:
-                subjects.append(subjectdetail.id)
-            # print(subjects)   
-            teacher = Teacher_Details.objects.filter(subject_taught__in = subjects).distinct()
-            # print(teacher)
-        return render(request,"teacherStudent/myTeacher.html",{"teachers":teacher})
+        for group in request.user.groups.all():
+            if group.name == "Student":
+                student = Student_Details.objects.all().filter(user=request.user.id)
+                for detail in student:
+                    sem = detail.semester
+                    course = detail.course_enrolled
+                    subject = Stu_Subject.objects.all().filter(semester=sem,course_related=course)
+                    subjects = []
+                    for subjectdetail in subject:
+                        subjects.append(subjectdetail.id)
+                    # print(subjects)   
+                    teacher = Teacher_Details.objects.filter(subject_taught__in = subjects).distinct()
+                    # print(teacher)
+                return render(request,"teacherStudent/myTeacher.html",{"teachers":teacher})
+            else:
+                return redirect("myStudent")
 
     else:
         return redirect("signin")
