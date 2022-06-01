@@ -87,3 +87,47 @@ def pre_save_Teacher(sender,instance,*args,**kwargs):
             
     except:
         pass
+
+
+# Assignment By Student
+  
+@receiver(pre_delete,sender=SubmitAssignment)
+def post_delete_submitassignment(sender,instance,*args,**kwargs):
+    try:
+        instance.submitted_data.delete(save=False)
+
+    except:
+        pass
+    
+@receiver(pre_save,sender=SubmitAssignment)
+def pre_save_submitassignment(sender,instance,*args,**kwargs):
+    try:
+        print("hello World From Pre_save")
+        old_data = instance.__class__.objects.get(id=instance.id).submitted_data.path
+        edited = instance.__class__.objects.get(id=instance.id).edited
+        edited = edited + 1 
+        instance.edited = edited
+        # SubmitAssignment.filter(pk=instance.pk).update(edited=edited)
+        # print(old_data)
+        try:
+            new_data = instance.submitted_data.path
+        except:
+            new_data = old_data
+        if new_data!=old_data:
+            import os
+            if os.path.exists(old_data):
+                os.remove(old_data)
+    except:
+        pass
+
+
+# @receiver(post_save,sender=SubmitAssignment)
+# def post_save_submitassignment(sender,instance,created,**kwargs):
+#     try:
+#         print("hello World")
+#         edited = instance.__class__.objects.get(id=instance.id).edited
+#         edited = edited + 1 
+#         instance.edited = edited
+#         instance.update()
+#     except:
+#         pass

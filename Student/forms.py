@@ -48,3 +48,15 @@ class AssignmentForm(forms.ModelForm):
             "posting_date":DateInput(attrs={"class":"form-control mydateinput"}),
             "posting_time":TimeInput(attrs={"class":"form-control mytimeinput"}),
         }
+        
+class SubmitAssignmentForm(forms.ModelForm):
+    class Meta:
+        model =  SubmitAssignment
+        fields = ["submitted_data"]
+        widgets = {
+            
+            "submitted_data":forms.FileInput(attrs={"class":"form-control myimage"}),
+
+        }
+        
+       

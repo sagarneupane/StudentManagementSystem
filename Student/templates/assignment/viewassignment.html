@@ -1,0 +1,92 @@
+{% extends '../profile.html' %}
+{% load static %}
+{% block title %}Assignments{% endblock title %}
+
+{% block anotherlink %}
+<link rel="stylesheet" href="{% static 'css/assignment/assignment.css' %}">
+{% endblock anotherlink %}
+
+
+{% block profcontent %}
+
+<div class="container subjects">
+    {% if messages %}
+      {% for message in messages %}
+        <h3 class="text-center">
+          {{message}}
+        </h3>
+        {%endfor %}
+    {% endif %}
+    <h1 class="text-center">See Assignment on {{subject_name}}</h1>
+    <div class="row">
+        <div class="container">
+            <div class="col-sm-5">
+                <table class="table-hover table ">
+                    {% if assignments %}
+                    {% for assignment in assignments %}
+                    
+                    <tr>
+                        <th>Assignment Name</th>
+                        <td>{{assignment.name}}</td>
+                    </tr>
+                    <tr>
+                        <th>Posted Date</th>
+                        <th>{{assignment.posting_date}}</th>
+                        
+                    </tr>
+                    <tr>
+                        <th>Posted Time</th>
+                        <th>{{assignment.posting_time}}</th>
+                    </tr>
+                    <tr>
+                        <th>
+                            Data
+                        </th>
+                        <td>
+                            <a href="{{assignment.assigned_data.url}}" target="_blank">Click Here to Download Questions</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Given By</th>
+                        <td>{{assignment.assigned_by}}</td>
+                    </tr>
+                    <tr>
+                        <th>Want To Submit answer?</th>
+                        <td>
+                            <a href="{% url 'submitassignment' assignment.id %}">Click Here to Submit Your  Answer</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        {% for submission in submitted_assignments %}
+                        {% if submission.edited == 0 or submission.edited < 4 %}
+                        <th>
+                            You have Edited {{submission.edited}} times.You can edit 4 times only
+                            
+                        </th>
+                        <td>Want to edit your submission?<a href="{% url 'editsubmission' submission.id %}">Click Here</a></td>
+                        {% endif %}
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    <thead>
+                        <h1>No Assignments are assigned</h1>
+                    </thead>
+                    
+                    {%endif%}
+            
+        
+        
+                </table>
+               
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+{% endblock profcontent %}
+
+
+

@@ -1,0 +1,53 @@
+[33mcommit 600c601a319d623067f23bfa26ac3fcee5305cdf[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: sagar <cyber.crime252@gmail.com>
+Date:   Wed Jun 1 09:04:49 2022 +0545
+
+    After Successfull implementation of Assignment by Teacher
+
+[33mcommit bfe652877a345181108cf88be8bc70f5947ccb73[m
+Author: sagar <cyber.crime252@gmail.com>
+Date:   Wed Jun 1 07:45:22 2022 +0545
+
+    Commit after making assignment for teacher model
+
+[33mcommit 960e457164f0daf62ad2cca71bfab90927393da1[m
+Author: sagar <cyber.crime252@gmail.com>
+Date:   Mon May 30 13:32:42 2022 +0545
+
+    Finalizing the Teacher Student
+
+[33mcommit 2606a5cb8e0758af7e775472ed7a007bbae6385b[m
+Author: sagar <cyber.crime252@gmail.com>
+Date:   Mon May 30 12:22:31 2022 +0545
+
+    Finishing myStudent and MyTeacher
+
+[33mcommit 667d3e6b2f28428e4802966ef1abfb362dcef46a[m
+Author: sagar <cyber.crime252@gmail.com>
+Date:   Mon May 30 08:53:42 2022 +0545
+
+    Changes in myTeacher CSS
+
+[33mcommit 7c63aa5af3f4cb637240e92027a9bc118cf367bd[m
+Author: sagar <cyber.crime252@gmail.com>
+Date:   Mon May 30 08:24:06 2022 +0545
+
+    My Teacher Update
+
+[33mcommit 265f59795e59a16295e30dacfa2bd3a86716c18a[m
+Author: sagar <cyber.crime252@gmail.com>
+Date:   Sat May 28 22:00:36 2022 +0545
+
+    Update of assignment.html its respective css and views
+
+[33mcommit f0cefb10ba1172ec2759c64986dfae24d2c71196[m
+Author: sagar <cyber.crime252@gmail.com>
+Date:   Sat May 28 20:48:11 2022 +0545
+
+    Changes In Models->Stu_Subject course_related<-attribute
+
+[33mcommit 33e6ddf2a203d3178dc1f709d2fb4f83eea5a979[m
+Author: sagar <cyber.crime252@gmail.com>
+Date:   Sat May 28 20:42:28 2022 +0545
+
+    First Commit

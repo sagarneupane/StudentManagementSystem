@@ -67,3 +67,14 @@ class AssignmentAdmin(admin.ModelAdmin):
         "posting_date",
         "posting_time",
     ]
+
+@admin.register(SubmitAssignment)
+class SubmitAssignmentAdmin(admin.ModelAdmin):
+    list_display = [
+        'assignment',
+        "submitted_by",
+        "submitted_date",
+        "submitted_time",
+        "submitted_data",
+        "edited",
+    ]

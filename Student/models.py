@@ -105,12 +105,11 @@ class Assignment(models.Model):
 class SubmitAssignment(models.Model):
     assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
     submitted_by = models.ForeignKey(Student_Details, null =True,on_delete=models.SET_NULL)  
-    submitted_date = models.DateField()
-    submitted_time = models.TimeField()
-    submitted_data = models.FileField(upload_to="assignment/")
-    edited = - 1
-    def edited(self):
-        return self.edited + 1
+    submitted_date = models.DateField(auto_now_add=True)
+    submitted_time = models.TimeField(auto_now_add=True)
+    submitted_data = models.FileField(upload_to="assignmentsubmitted/")
+    edited = models.IntegerField(default=0)
+
     def __str__(self):
-        return self.assignment
+        return self.assignment.name
     
