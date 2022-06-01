@@ -18,3 +18,23 @@
     box-shadow: -1px -5px 5px 7px black;
     cursor: pointer;
 }
+
+.subjects .row {
+    /* box-shadow: 0 0 5px 8px grey;
+    background: linear-gradient(80deg, rgba(255, 137, 181, 0.65), rgb(155, 253, 199)); */
+    font-variant: small-caps;
+    padding: 25px;
+}
+
+.subjects .row label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 1rem;
+}
+
+.subjects .row .deferrors {
+    display: block;
+    color: red;
+    margin-top: 10px;
+    /* font-size: 2px; */
+}

@@ -15,4 +15,5 @@ urlpatterns = [
     path('myStudent',views.myStudent,name="myStudent"),
     path('intoassignment',views.IntoAssignment,name="intoassignment"),
     path('assigntask/<int:id>',views.assigntask,name="assigntask"),
+    path('submitassignment/<int:id>',views.submitassignment,name="submitassignment"),
 ]

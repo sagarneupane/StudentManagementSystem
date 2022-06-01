@@ -99,3 +99,18 @@ class Assignment(models.Model):
     posting_date = models.DateField()
     posting_time = models.TimeField()
     
+    def __str__(self):
+        return self.name
+
+class SubmitAssignment(models.Model):
+    assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
+    submitted_by = models.ForeignKey(Student_Details, null =True,on_delete=models.SET_NULL)  
+    submitted_date = models.DateField()
+    submitted_time = models.TimeField()
+    submitted_data = models.FileField(upload_to="assignment/")
+    edited = - 1
+    def edited(self):
+        return self.edited + 1
+    def __str__(self):
+        return self.assignment
+    

@@ -240,21 +240,43 @@ def IntoAssignment(request):
     else:
         return redirect("signin")
 
-def assigntask(request,id=1):
-    
-    if request.method=="POST":
-        fm = AssignmentForm(request.POST,request.FILES)
-        
-        if fm.is_valid():
-            
-            data = fm.save(commit=False)
-            # data.name = "Sagar"
-            data.subject = Stu_Subject.objects.get(id=request.user.id)
-            data.assigned_by = Teacher_Details.objects.get(id=id)
-            dat = data.save()
-            if dat:
-                return HttpResponse("DATA SUBMISSION SUICCESSFULL")
-    else:
-        fm = AssignmentForm()
-    return render(request,'assignment/assigntask.html',{"form":fm})
+def assigntask(request,id):
+    if request.user.is_authenticated:
+        for group in request.user.groups.all():
+            if group.name == "Teacher":
+                subject_name = Stu_Subject.objects.all().filter(id=id)
+                
+                for subject in subject_name:
+                    sub_choosen = subject.id
+                    print(sub_choosen)
+                teacher_subject = Teacher_Details.objects.all().filter(user=request.user.id)
+                for assigned_subject in teacher_subject:
+                    teacher_assigned = assigned_subject.subject_taught.all()
+                sub = [s.id for s in teacher_assigned]
 
+                if sub_choosen in sub:
+                    if request.method=="POST":
+                        fm = AssignmentForm(request.POST,request.FILES)
+                            
+                        if fm.is_valid():
+                                
+                            data = fm.save(commit=False)
+                                # data.name = "Sagar"
+                            data.subject = Stu_Subject.objects.get(id=id)
+                            data.assigned_by = Teacher_Details.objects.get(user=request.user.id)
+                            dat = data.save()
+                            messages.success(request,"Assignment Successfully Submitted")
+                            return redirect("intoassignment")
+                    else:
+                        fm = AssignmentForm()
+                    return render(request,'assignment/assigntask.html',{"form":fm})
+                else:
+                    return redirect("intoassignment")
+            else:
+                return redirect("intoassignment")
+    else:
+        return redirect("signin")
+
+
+def submitassignment(request,id):
+    return render(request,'assignment/submitassignment.html')
