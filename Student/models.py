@@ -2,6 +2,11 @@ from django.db import models
 from django.core.validators import MinValueValidator,MaxValueValidator
 from django.contrib.auth.models import User
 
+    
+
+
+# import os
+
 class University(models.Model):
     university_name= models.CharField(max_length=150)
     university_code =  models.CharField(max_length=5)
@@ -85,3 +90,12 @@ class Student_Details(models.Model):
     
 
 
+class Assignment(models.Model):
+    name = models.CharField(max_length=200)
+    dateTime = models.DateTimeField(auto_now_add=True)
+    subject = models.ForeignKey(Stu_Subject, on_delete=models.CASCADE)
+    assigned_by = models.ForeignKey(Teacher_Details,null=True, on_delete=models.SET_NULL)
+    assigned_data = models.FileField(upload_to="assignment/")
+    posting_date = models.DateField()
+    posting_time = models.TimeField()
+    

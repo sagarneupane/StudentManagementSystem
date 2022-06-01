@@ -1,0 +1,33 @@
+{% extends '../profile.html' %}
+{% load static %}
+{% block title %}Assignments{% endblock title %}
+
+{% block anotherlink %}
+<link rel="stylesheet" href="{% static 'css/assignment/assignment.css' %}">
+{% endblock anotherlink %}
+
+
+{% block profcontent %}
+
+<div class="container subjects">
+    <h1 class="text-center">Give Assignment To Student</h1>
+    <div class="row">
+      <form action="" method="POST" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+        {{form}}
+        <br>
+        <input type="submit" value="Submit">
+        <br>
+        <br>
+      </form>
+       
+
+
+    </div>
+</div>
+
+
+{% endblock profcontent %}
+
+
+

@@ -56,5 +56,14 @@ class Teacher_DetailsAdmin(admin.ModelAdmin):
         "subject_teacher_teaches",
         ]
     
-
-    
+@admin.register(Assignment)
+class AssignmentAdmin(admin.ModelAdmin):
+    list_display = [
+        'name',
+        "dateTime",
+        "subject",
+        "assigned_by",
+        "assigned_data",
+        "posting_date",
+        "posting_time",
+    ]

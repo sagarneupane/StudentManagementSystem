@@ -2,6 +2,8 @@ from django.contrib.auth.forms import UserCreationForm,UserChangeForm
 from django.contrib.auth.models import User
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
+from .models import *
+
 
 
 class RegisterUser(UserCreationForm):
@@ -29,4 +31,20 @@ class UserEditForm(UserChangeForm):
             "email":forms.TextInput(attrs={"class":"custominput","placeholder":"Your Email Here"}),
         }
         
-    
+
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+class TimeInput(forms.TimeInput):
+    input_type = 'time'
+
+class AssignmentForm(forms.ModelForm):
+    class Meta:
+        model =  Assignment
+        fields = ["name","assigned_data","posting_date","posting_time"]
+        widgets = {
+            "name":forms.TextInput(attrs={"class":"form-control myinput","placeholder":"Enter Assignment Name: Practice Question"}),
+            "assigned_data":forms.FileInput(attrs={"class":"form-control myimage"}),
+            "posting_date":DateInput(attrs={"class":"form-control mydateinput"}),
+            "posting_time":TimeInput(attrs={"class":"form-control mytimeinput"}),
+        }

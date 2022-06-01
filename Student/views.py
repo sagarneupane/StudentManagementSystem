@@ -1,10 +1,11 @@
 from django.shortcuts import render, HttpResponse,redirect
-from .forms import RegisterUser,LoginForm,UserEditForm
+from .forms import *
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate,login,logout,update_session_auth_hash
 from django.contrib.auth.models import User
 from .models import *
+
 # Create your views here.
 def dashboard(request):
     if not request.user.is_authenticated:
@@ -141,6 +142,12 @@ def subjectdetail(request,id):
     if request.user.is_authenticated:
         subjects = Stu_Subject.objects.all().filter(id=id)
         subject_field = [f.name for f in Stu_Subject._meta.get_fields()]
+        for fields in subject_field:
+            subject_field.pop(0)
+            # subject_field.pop(1)
+            if fields == 'id':
+                break
+        print(subject_field)
         subject_field_dict = {}
         for subject in subjects:
             for field in subject_field:
@@ -156,37 +163,13 @@ def subjectdetail(request,id):
                     continue
                 else:
                     subject_field_dict[field] = getattr(subject,field)
-        print(subject_field_dict)
+        # print(subject_field_dict)
         
         return render(request,'course/subjectdetails.html',{"subject_field_dict":subject_field_dict})
     else:
         return redirect("signin")
 
 
-def IntoAssignment(request):
-    if request.user.is_authenticated:
-        subjects = []
-        for group in request.user.groups.all():
-            if group.name == "Teacher":
-                teachers = Teacher_Details.objects.all().filter(user=request.user.id)
-                for teacher in teachers:
-                    teacher_subject = teacher.subject_taught.all()
-                    for subject in teacher_subject:
-                        sub = Stu_Subject.objects.all().filter(subject_code=subject)
-                        subjects.append(sub)
-                        # print(Stu_Subject.objects.all().filter(subject_code=subject))
-            
-            if group.name == "Student":
-                students = Student_Details.objects.all().filter(user=request.user.id)
-                for student in students:
-                    student_course = student.course_enrolled
-                    subject = Stu_Subject.objects.all().filter(course_related=student_course,semester=student.semester)
-                    subjects.append(subject)
-        print(subjects)
-        return render(request,'assignment/assignment.html',{"data_recieved":subjects})
-    else:
-        return redirect("signin")
-        
         
         
 def myTeacher(request):
@@ -230,4 +213,48 @@ def myStudent(request):
                 return redirect("myTeacher")
     else:
         return redirect("signin")
+
+
+
+def IntoAssignment(request):
+    if request.user.is_authenticated:
+        subjects = []
+        for group in request.user.groups.all():
+            if group.name == "Teacher":
+                teachers = Teacher_Details.objects.all().filter(user=request.user.id)
+                for teacher in teachers:
+                    teacher_subject = teacher.subject_taught.all()
+                    for subject in teacher_subject:
+                        sub = Stu_Subject.objects.all().filter(subject_code=subject)
+                        subjects.append(sub)
+                        # print(Stu_Subject.objects.all().filter(subject_code=subject))
+            
+            if group.name == "Student":
+                students = Student_Details.objects.all().filter(user=request.user.id)
+                for student in students:
+                    student_course = student.course_enrolled
+                    subject = Stu_Subject.objects.all().filter(course_related=student_course,semester=student.semester)
+                    subjects.append(subject)
+        print(subjects)
+        return render(request,'assignment/assignment.html',{"data_recieved":subjects})
+    else:
+        return redirect("signin")
+
+def assigntask(request,id=1):
+    
+    if request.method=="POST":
+        fm = AssignmentForm(request.POST,request.FILES)
+        
+        if fm.is_valid():
+            
+            data = fm.save(commit=False)
+            # data.name = "Sagar"
+            data.subject = Stu_Subject.objects.get(id=request.user.id)
+            data.assigned_by = Teacher_Details.objects.get(id=id)
+            dat = data.save()
+            if dat:
+                return HttpResponse("DATA SUBMISSION SUICCESSFULL")
+    else:
+        fm = AssignmentForm()
+    return render(request,'assignment/assigntask.html',{"form":fm})
 

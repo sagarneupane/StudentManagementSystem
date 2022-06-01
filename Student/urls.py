@@ -11,7 +11,8 @@ urlpatterns = [
     path('viewcourse',views.viewCourses,name="viewCourse"),
     path('coursedetails/<int:id>',views.coursedetails,name="coursedetails"),
     path('subjectdetails/<int:id>',views.subjectdetail,name="subjectdetail"),
-    path('intoassignment',views.IntoAssignment,name="intoassignment"),
     path('teacherStudent',views.myTeacher,name="myTeacher"),
     path('myStudent',views.myStudent,name="myStudent"),
+    path('intoassignment',views.IntoAssignment,name="intoassignment"),
+    path('assigntask/<int:id>',views.assigntask,name="assigntask"),
 ]
