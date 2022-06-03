@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate,login,logout,update_session_auth_ha
 from django.contrib.auth.models import User
 from .models import *
 
+
 # Create your views here.
 def dashboard(request):
     if not request.user.is_authenticated:
@@ -80,6 +81,7 @@ def viewProfile(request,id=0):
     if request.user.is_authenticated:
         users = User.objects.filter(id=request.user.id)
         fields  = [f.name for f in User._meta.get_fields()]
+        fields.pop(0)
         fields.pop(0)
         fields.pop(0)
         fields.pop(0)
@@ -303,7 +305,9 @@ def viewassignment(request,id):
                         ass_id = 0
                         for ass in assignments:
                             ass_id = ass.id
-                        submitted_assignments = SubmitAssignment.objects.all().filter(assignment = ass_id,submitted_by = request.user.id)
+                        print(ass_id)
+                        # print(type(Student_Details.objects.get(user=request.user.id)))
+                        submitted_assignments = SubmitAssignment.objects.all().filter(submitted_by=request.user.id,assignment=ass_id)
                         print(submitted_assignments)
                         context = {"subject_name":subject_name,"assignments":assignments,"submitted_assignments":submitted_assignments}
                         return render(request,'assignment/viewassignment.html',context)
@@ -343,22 +347,31 @@ def submitassignment(request,id):
                     for stu in student:
                         myuser = stu.user
                     print(myuser)
-                    if myuser!="":
-                        if request.method == "POST":
-                            fm = SubmitAssignmentForm(request.POST,request.FILES)
-                            if fm.is_valid:
-                                data = fm.save(commit=False)
-                                data.submitted_by = Student_Details.objects.get(user = request.user.id)
-                                data.assignment = Assignment.objects.get(id=id)
-                                data.save()
-                                messages.success(request,"Assignment Successfully Submitted")
-                                return redirect("intoassignment")
-                        else:
-                            fm = SubmitAssignmentForm()
-                        context = {"form":fm}
-                        return render(request,'assignment/submitassignment.html',context)
+                    submisson_exists = SubmitAssignment.objects.all().filter(submitted_by=request.user.id,assignment=id)
+                    if submisson_exists:
+                        sub_id = 0
+                        for submission in submisson_exists:
+                            sub_id = submission.id
+                        # editsubmission = "editsubmission"
+                        return redirect(f'../editsubmission/{sub_id}')
                     else:
-                        return redirect("intoassignment")
+                        if myuser!="":
+                            if request.method == "POST":
+                                fm = SubmitAssignmentForm(request.POST,request.FILES)
+                                if fm.is_valid:
+                                    data = fm.save(commit=False)
+                                    data.submitted_by = User.objects.get(id = request.user.id)
+                                    
+                                    data.assignment = Assignment.objects.get(id=id)
+                                    data.save()
+                                    messages.success(request,"Assignment Successfully Submitted")
+                                    return redirect("intoassignment")
+                            else:
+                                fm = SubmitAssignmentForm()
+                            context = {"form":fm}
+                            return render(request,'assignment/submitassignment.html',context)
+                        else:
+                            return redirect("intoassignment")
                 else:
                     return redirect("intoassignment")
             else:
@@ -403,7 +416,7 @@ def editsubmission(request,id):
                             if fm.is_valid:
                                 data = fm.save(commit=False)
                                 data.submitted_data = updated_data
-                                data.submitted_by = Student_Details.objects.get(user = request.user.id)
+                                data.submitted_by = User.objects.get(id = request.user.id)
                                 # data.assignment = Assignment.objects.get(id=assig_id)
                                 data.save()
                                 messages.success(request,"Assignment Successfully Submitted")
@@ -423,3 +436,24 @@ def editsubmission(request,id):
         return redirect("signin")
     
 
+def prevassignedtask(request,id):
+    if request.user.is_authenticated:
+        template_name = "assignment/prevassignedassignment.html"
+        data = Assignment.objects.all().filter(subject=id)
+        subject = Stu_Subject.objects.get(id=id).subject_name
+        print(subject)
+        context  = {"assignments":data,"subject":subject}
+        return render(request, template_name,context)
+    else:
+        return redirect("signin")
+
+def viewsubmission(request,id):
+    if request.user.is_authenticated:
+        template_name = "assignment/viewsubmission.html"
+        data = SubmitAssignment.objects.all().filter(assignment=id)
+        subject = Assignment.objects.get(id=id).name
+        context  = {"assignments":data,"subject":subject}
+        return render(request, template_name,context)
+    
+    else:
+        return redirect("signin")

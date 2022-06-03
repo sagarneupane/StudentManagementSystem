@@ -121,13 +121,19 @@ def pre_save_submitassignment(sender,instance,*args,**kwargs):
         pass
 
 
-# @receiver(post_save,sender=SubmitAssignment)
-# def post_save_submitassignment(sender,instance,created,**kwargs):
+# @receiver(post_save,sender=AssignmentCheck)
+# def post_save_AssignmentCheck(sender,instance,*args,**kwargs):
 #     try:
-#         print("hello World")
-#         edited = instance.__class__.objects.get(id=instance.id).edited
-#         edited = edited + 1 
-#         instance.edited = edited
-#         instance.update()
+#         print("hello")
+#         assignment = AssignmentCheck.objects.get(id=instance.id).assignment.id
+#         print(assignment)
+#         print("===================================")
+        
+#         submitted = SubmitAssignment.objects.get(id=assignment)
+#         print("--------------------------------------------------")
+#         print(submitted)
+#         submitted.check_status = True
+#         submitted.save()
+        
 #     except:
 #         pass

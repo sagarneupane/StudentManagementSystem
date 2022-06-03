@@ -1,0 +1,27 @@
+.myassignedcard {
+    padding: 25px;
+    background: linear-gradient(to right, rgba(245, 39, 102, 0.66), rgba(219, 56, 255, 0.66));
+    text-align: center;
+    box-shadow: 0 0 4px 2px grey;
+}
+
+.card-title {
+    padding: 5px;
+}
+
+.card-text {
+    padding: 4px;
+}
+
+.card-text a {
+    text-decoration: none;
+    color: whitesmoke;
+    font-size: 20px;
+    transition: 0.3s ease;
+}
+
+.card-text a:hover {
+    color: black;
+    font-size: 22px;
+    text-decoration: underline;
+}

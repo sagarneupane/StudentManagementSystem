@@ -71,10 +71,17 @@ class AssignmentAdmin(admin.ModelAdmin):
 @admin.register(SubmitAssignment)
 class SubmitAssignmentAdmin(admin.ModelAdmin):
     list_display = [
+        "id",
         'assignment',
         "submitted_by",
         "submitted_date",
         "submitted_time",
         "submitted_data",
         "edited",
+        "submision_name"
+    ]
+@admin.register(AssignmentCheck)
+class AssignmentCheckAdmin(admin.ModelAdmin):
+    list_display = [
+        "assignment","checked_date","correct_status","suggestion_for_wrong","checked_by"
     ]

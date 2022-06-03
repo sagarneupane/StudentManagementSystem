@@ -1,0 +1,64 @@
+{% extends '../profile.html' %}
+{% load static %}
+{% block title %}Assignments{% endblock title %}
+
+{% block anotherlink %}
+<link rel="stylesheet" href="{% static 'css/assignment/assignment.css' %}">
+<link rel="stylesheet" href="{% static 'css/assignment/prevassignedassignment.css' %}">
+{% endblock anotherlink %}
+
+
+{% block profcontent %}
+
+<div class="container subjects">
+    {% if messages %}
+      {% for message in messages %}
+        <h3 class="text-center">
+          {{message}}
+        </h3>
+        {%endfor %}
+    {% endif %}
+    <h1 class="text-center">See Submission on {{subject}}</h1>
+    <div class="row">
+
+            {% for assignment in assignments %}
+            <div class="col-sm-5 offset-sm-1 myassignedcard">
+               <table class="table-hover table">
+                   <thead>Submitted By: {{assignment.submitted_by.first_name}} {{assignment.submitted_by.last_name}}</thead>
+                   <tr>
+                       <th>Submission Date</th>
+                       <td>{{assignment.submitted_date|date:"D,d M Y"}}</td>
+                   </tr>
+                  <tr>
+                    <th>Submission Time</th>
+                    <td>{{assignment.submitted_time|time:"g:i:s A"}}</td>
+                  </tr>
+                  <tr>
+                    <th>Subject</th>
+                    <td>
+                      {{assignment.assignment.subject}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>Submitted Data</th>
+                    <td><a href="{{assignment.submitted_data.url}}" target="_blank">Click here to Download</a></td>
+                  </tr>
+                  <tr>
+                    <th>
+                      Give Review
+                    </th>
+                    <td><a href="">Click Here to Give Review</a></td>
+                  </tr>
+               </table>
+            </div>
+            {%endfor%}
+
+
+    </div>
+</div>
+
+
+{% endblock profcontent %}
+
+
+

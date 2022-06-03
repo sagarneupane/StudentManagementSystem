@@ -22,6 +22,10 @@
                     <th>Assign A Task</th>
                     <td><a href="{% url 'assigntask' subject.id %}">Click here To Assign Task</a></td>
                 </tr>
+                <tr>
+                    <th>View Assigned Task</th>
+                    <td><a href="{% url  'prevassignedtask' subject.id %}">Click Here To See Previously Assigned Tasks</a></td>
+                </tr>
             </table>
         </div>
     

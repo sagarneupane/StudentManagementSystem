@@ -18,4 +18,7 @@ urlpatterns = [
     path('viewassignment/<int:id>',views.viewassignment,name="viewassignment"),
     path('submitassignment/<int:id>',views.submitassignment,name="submitassignment"),
     path('editsubmission/<int:id>',views.editsubmission,name="editsubmission"),
+    path('prevassignedtask/<int:id>',views.prevassignedtask,name="prevassignedtask"),
+    path('viewsubmission/<int:id>',views.viewsubmission,name="viewsubmission"),
+    path('submitanswers/<int:id>',views.viewsubmission,name="submitanswers"),
 ]

@@ -1,0 +1,43 @@
+{% extends '../profile.html' %}
+{% load static %}
+{% block title %}Assignments{% endblock title %}
+
+{% block anotherlink %}
+<link rel="stylesheet" href="{% static 'css/assignment/assignment.css' %}">
+<link rel="stylesheet" href="{% static 'css/assignment/prevassignedassignment.css' %}">
+{% endblock anotherlink %}
+
+
+{% block profcontent %}
+
+<div class="container subjects">
+    {% if messages %}
+      {% for message in messages %}
+        <h3 class="text-center">
+          {{message}}
+        </h3>
+        {%endfor %}
+    {% endif %}
+    <h1 class="text-center">See Assignment on {{subject}}</h1>
+    <div class="row">
+
+            {% for assignment in assignments %}
+            <div class="col-sm-5 offset-sm-1">
+                <div class="card myassignedcard">
+                    <h5 class="card-title">{{assignment.name}} on {{assignment.dateTime|date:"D,d M , Y"}}</h5>
+                    <p class="card-text"><a href="{{assignment.assigned_data.url}}" target="_blank">Click Here to download File</a></p>
+                    <a href="{% url 'viewsubmission' assignment.id %}" class="btn btn-primary">View Submission</a>
+                    <a href="{% url 'submitanswers' assignment.id %}" class="btn btn-primary">Submit Answers</a>
+                </div>
+            </div>
+            {%endfor%}
+
+
+    </div>
+</div>
+
+
+{% endblock profcontent %}
+
+
+

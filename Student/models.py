@@ -104,12 +104,22 @@ class Assignment(models.Model):
 
 class SubmitAssignment(models.Model):
     assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
-    submitted_by = models.ForeignKey(Student_Details, null =True,on_delete=models.SET_NULL)  
+    submitted_by = models.ForeignKey(User, null =True,on_delete=models.SET_NULL)  
     submitted_date = models.DateField(auto_now_add=True)
     submitted_time = models.TimeField(auto_now_add=True)
     submitted_data = models.FileField(upload_to="assignmentsubmitted/")
     edited = models.IntegerField(default=0)
 
+    def submision_name(self):
+        return f'{self.assignment} {self.submitted_by}'
+    
     def __str__(self):
         return self.assignment.name
-    
+
+class AssignmentCheck(models.Model):
+    assignment = models.ForeignKey(SubmitAssignment, on_delete=models.CASCADE)
+    checked_by = models.ForeignKey(User, on_delete=models.SET_NULL,null=True)
+    checked_status = models.BooleanField(auto_created=True,default=True)
+    checked_date = models.DateTimeField(auto_now_add=True)
+    correct_status = models.BooleanField()
+    suggestion_for_wrong = models.TextField(default=None,blank=True)
