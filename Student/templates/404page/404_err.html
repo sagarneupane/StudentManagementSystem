@@ -1,0 +1,75 @@
+
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %}Profile{% endblock title %}
+
+
+{% block icon %}
+    <link rel="shortcut icon" href="{% static 'img/profile.ico' %}" type="image/x-icon">
+{% endblock icon %}
+    
+
+{% block link %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/profile/profile.css'%}">
+    <link rel="stylesheet" href="{% static 'css/profile/navbar.css' %}">
+    <link rel="stylesheet" href="{% static  'css/404error.css' %}">
+{%block anotherlink %}
+{% endblock anotherlink %}
+{% endblock link %}
+
+
+
+{% block content %}
+    
+
+
+
+<div class="container-fluid onepageprofile">
+
+    <div class="row">
+        <div class="col-sm-2">
+            {% include "navbar/navbar.html" %}
+        </div>
+        <div class="col-sm-9">
+            <div class="row">
+                <div class="offset-sm-11 col-sm-1">
+                    <div class="profileshow">
+                        <span><i class="fa-solid fa-id-card"></i>Profile</span>
+                        <div class="myprofile">
+                            <ul>
+                                    <a href="{% url 'signout' %}"><li><i class="fa fa-power-off" aria-hidden="true"></i>Logout</li></a>
+                                    <a href="{% url 'viewprofile' request.user.id %}"><li><i class="fa fa-user" aria-hidden="true"></i>View Profile</li></a>
+                                    <a href="{% url 'editprofile' request.user.id %}"><li><i class="fas fa-edit"></i> Edit Profile</li></a>
+                            </ul>
+                        </div>
+                        
+                    </div>
+                </div>
+            
+ 
+                <div class="col-sm-12 m-3 createdmessage">
+                    {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                        <li{% if message.tags %} class="text-{{ message.tags }}"{% endif %}> <span class="h2">{{ message }}</span> </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                        {% block profcontent %}
+                        <div class="container">
+                            <h1 class="text-center text-404">404</h1>
+                            <hr>
+                            <h3 class="text-center display-2">Page Not Found</h3>
+                            <p class="text-center">We are getting Trouble to find the Site</p>
+                        </div>
+                        {%endblock profcontent%}
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse,redirect
+from django.shortcuts import render, HttpResponse,redirect,Http404
 from .forms import *
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
@@ -73,7 +73,6 @@ def editProfile(request,id=0):
     else:
         return redirect("signin")
     
-
 # from operator import attrgetter
 
 def viewProfile(request,id=0):
@@ -81,10 +80,12 @@ def viewProfile(request,id=0):
     if request.user.is_authenticated:
         users = User.objects.filter(id=request.user.id)
         fields  = [f.name for f in User._meta.get_fields()]
-        fields.pop(0)
-        fields.pop(0)
-        fields.pop(0)
-        fields.pop(0)
+        for f in fields:
+            fields.pop(0)
+            if f=="id":
+                break
+        # fields.pop(0)
+        print(fields)
         userdata = {}
         groups_check = []
         for field in fields:
@@ -114,6 +115,16 @@ def viewProfile(request,id=0):
     else:
         return redirect("signin")
 
+
+"""
+404 Error Page
+
+
+"""
+def page_not_found(request):
+    return render(request,"404page/404_err.html")
+
+# End of 404 page
 
 def viewCourses(request):
     if request.user.is_authenticated:
@@ -321,8 +332,6 @@ def viewassignment(request,id):
         return redirect("signin")
 
 
-
-
 def submitassignment(request,id):
     if request.user.is_authenticated:
         for group in request.user.groups.all():
@@ -436,24 +445,140 @@ def editsubmission(request,id):
         return redirect("signin")
     
 
+
+# This will show student and teacher the assignment which were assigned before and submitted assignment and 
+# For teacher this view will allow to submit correct answers and see submitted answers .. from students. 
+# For Student this view will allow to see the answers that they have submitted and see correct answers.
+
 def prevassignedtask(request,id):
     if request.user.is_authenticated:
-        template_name = "assignment/prevassignedassignment.html"
-        data = Assignment.objects.all().filter(subject=id)
-        subject = Stu_Subject.objects.get(id=id).subject_name
-        print(subject)
-        context  = {"assignments":data,"subject":subject}
-        return render(request, template_name,context)
+        for group in request.user.groups.all():
+            if group.name=="Teacher" or group.name=="Student":
+                if Stu_Subject.objects.filter(id=id).exists():
+                    subjectdetail = Stu_Subject.objects.all().filter(id=id)
+                    subject = Stu_Subject.objects.get(id=id).subject_name
+                    # For Teacher Entry in assigned Task for Specific Subject
+                    if group.name=="Teacher":
+                        subcode = []
+                        # Filtering out subject id for filtering out teacher
+                        for sub in subjectdetail:
+                            subcode.append(sub.id)
+                        # Filtering out teacher which is logged in and if he/she has gone inside the subject which they are enrolled
+                        teacher = Teacher_Details.objects.all().filter(user=request.user.id,subject_taught__in = subcode)
+                        teacher_username = ""
+                        # If there is any teacher iterating over it and taking out his/her username to check if they are matching with currently logged user or not
+                        for teach in teacher:
+                            teacher_username = teach.user.username
+                        # Checking the logged in teacher is true or not after checking if he/she is enrolled in respective subject 
+                        if teacher_username==request.user.username:
+                            template_name = "assignment/prevassignedassignment.html"
+                            data = Assignment.objects.all().filter(subject=id)
+                            context  = {"assignments":data,"subject":subject}
+                            return render(request, template_name,context)
+                        else:
+                            return redirect("intoassignment")
+                        
+                    # For student Entry in assigned Task for specific subject
+                    elif group.name == "Student":
+                        subject_course = ""
+                        subject_semester = ""
+                        # Taking out the subject_course and the semester in which the subject is taught mainly to filter out the student taking that course and semester
+                        # Because the students which are enrolled in other courses and other sem. they must not be allowed to see the assignment of 
+                        # Subject which they are not enrolled
+                        for sub in subjectdetail:
+                            subject_course = sub.course_related
+                            subject_semester = sub.semester
+                        # Checking out student if they are present or not with the same course as subject and sem sem as subject and same user as logged in
+                        student = Student_Details.objects.all().filter(user=request.user.id,course_enrolled=subject_course,semester=subject_semester)
+                        student_username= "" 
+                        
+                        for stu in student:
+                            student_username = stu.user.username
+                        # Checking out filtered username with the logged in username coz if the match we can be sure that the student is enrolled in the course
+                        # and he/she is in the sem where that subject is taught
+                        if student_username == request.user.username:
+                            template_name = "assignment/prevassignedassignment.html"
+                            data = Assignment.objects.all().filter(subject=id)
+                            context  = {"assignments":data,"subject":subject}
+                            return render(request, template_name,context)
+                        else:
+                            return redirect("intoassignment")
+                    else:
+                        return redirect("intoassignment")
+                else:
+                    return redirect("404error")
+            else:
+                return redirect("intoassignment")
     else:
         return redirect("signin")
+
+
+
+
+# End of Previous assigned Task
+
+
+
+"""
+This view will help teacher to see the submission done on the assignment that they have assigned to them
+
+"""
 
 def viewsubmission(request,id):
     if request.user.is_authenticated:
         template_name = "assignment/viewsubmission.html"
         data = SubmitAssignment.objects.all().filter(assignment=id)
         subject = Assignment.objects.get(id=id).name
-        context  = {"assignments":data,"subject":subject}
-        return render(request, template_name,context)
-    
+        assigned_by = Assignment.objects.get(id=id).assigned_by
+        print(request.user.username)
+        if request.user.username ==  assigned_by.user.username:
+            context  = {"assignments":data,"subject":subject}
+            return render(request, template_name,context)
+        else:
+            return redirect("intoassignment")
     else:
         return redirect("signin")
+
+
+
+
+
+"""
+This(Check Assignment) view helps teacher to check the assignment assigned by student they can review it. and send feedback. on wrong /right etc.
+implementation:
+1. checking the user(teacher) is authenticated or not:
+2. checking the user belongs to group teache or not. Beacuse students should not be allowed to check the assignment
+3. checking the teacher who is currently checking the assignment is enrolled to the subject or not and the assignment is given by them or not
+    because the teacher who is not enrolled to the subject and the assignment is not given by him then he/she should not be allowed to check 
+    that.
+Procedures:
+1. First we check user is authenticated or not by using is_authenticated function
+2. Then we check user belongs to group or not by taking the group name from manytomany relation that the user have with groups.
+3. Then finally the checking for subject is done by using the id taken by the the function checkassignment(). This function takes the id
+    of "SubmitAssignment" model. and that model is connected to the "Assignment" model via foreignkey assignment and we take the subject_id from 
+    the Assignment model. and check there exists the teacher which is enrolled in subject_id(that subject where the student has submitted assignment.)
+4. If there exists we need to check if the teacher currently logged in is that teacher which is enrolled or not.
+5. If all these procedures are verified then it will allow teacher to check assignment
+"""
+def checkassignment(request,id):
+    if request.user.is_authenticated:
+        for group in request.user.groups.all():
+            if group.name =="Teacher":
+                assig_id = 0 
+                submission = SubmitAssignment.objects.all().filter(id=id)
+                for submi in submission:
+                    assig_id = submi.assignment
+                assignment = Assignment.objects.all().filter(name=assig_id)
+                print(assignment)
+                print(submission)
+                assignment_assigned_user = ""
+                for assigned_user in assignment:
+                    assignment_assigned_user = assigned_user.assigned_by.user
+                if assignment_assigned_user.username == request.user.username:
+                    print("Yes")
+                return render(request,"assignment/checkassignment.html")
+            else:
+                return redirect("intoassignment")
+    else:
+        return redirect("signin")
+        

@@ -6,6 +6,7 @@ urlpatterns = [
     path('register/',views.signup,name="signup"),
     path('signout/',views.signout,name="signout"),
     path('profile/',views.profile,name="profile"),
+    path('404notFound/',views.page_not_found,name="404error"),
     path('editprofile/<int:id>',views.editProfile,name="editprofile"),
     path('viewprofile/<int:id>',views.viewProfile,name="viewprofile"),
     path('viewcourse',views.viewCourses,name="viewCourse"),
@@ -20,5 +21,6 @@ urlpatterns = [
     path('editsubmission/<int:id>',views.editsubmission,name="editsubmission"),
     path('prevassignedtask/<int:id>',views.prevassignedtask,name="prevassignedtask"),
     path('viewsubmission/<int:id>',views.viewsubmission,name="viewsubmission"),
+    path('checkassignment/<int:id>',views.checkassignment,name="checkassignment"),
     path('submitanswers/<int:id>',views.viewsubmission,name="submitanswers"),
 ]

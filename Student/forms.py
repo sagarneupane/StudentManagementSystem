@@ -59,4 +59,12 @@ class SubmitAssignmentForm(forms.ModelForm):
 
         }
         
-       
+class AssignmentCheckForm(forms.ModelForm):
+    class Meta:
+        model = AssignmentCheck
+        fields = ["correct_status","suggestion_for_wrong"]
+        labels = {
+            "correct_status":"Are all the answers Correct?",
+            "suggestion_for_wrong":"Write Reviews to student.."
+        }
+        
