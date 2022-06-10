@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import *
+from django.contrib.auth.models import User
 # Register your models here.
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
@@ -33,8 +34,10 @@ class Stu_SubjectAdmin(admin.ModelAdmin):
                     ]
 
 
+
 @admin.register(Student_Details)
 class Student_DetailsAdmin(admin.ModelAdmin):
+    # inlines = [Student_DetailsInline]
     list_display = [
         "user",
         "address",

@@ -23,4 +23,5 @@ urlpatterns = [
     path('viewsubmission/<int:id>',views.viewsubmission,name="viewsubmission"),
     path('checkassignment/<int:id>',views.checkassignment,name="checkassignment"),
     path('submitanswers/<int:id>',views.viewsubmission,name="submitanswers"),
+    # path('readpdf/<str:url>',views.show_pdf,name="readpdf"),
 ]

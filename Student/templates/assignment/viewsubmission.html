@@ -41,7 +41,9 @@
                   </tr>
                   <tr>
                     <th>Submitted Data</th>
-                    <td><a href="{{assignment.submitted_data.url}}" target="_blank">Click here to Download</a></td>
+                    <td>
+                      <a href="{{assignment.submitted_data.url }}" target="_blank">Click here to Download</a>
+                    </td>
                   </tr>
                   <tr>
                     <th>
@@ -50,6 +52,12 @@
                     <td><a href="{% url 'checkassignment' assignment.id  %}">Click Here to Give Review</a></td>
                   </tr>
                </table>
+
+               {% comment %} <object data="{{assignment.submitted_data.url}}" type="application/ppt">
+                <div>
+                  No online PPT viewer installed
+                </div>
+               </object> {% endcomment %}
             </div>
             {%endfor%}
 

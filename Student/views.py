@@ -183,6 +183,7 @@ def subjectdetail(request,id):
         return redirect("signin")
 
 
+# Start of View my Teacher View
         
         
 def myTeacher(request):
@@ -206,7 +207,22 @@ def myTeacher(request):
                 return redirect("myStudent")
     else:
         return redirect("signin")
-    
+
+
+
+
+#End of View My Teacher View
+
+ 
+"""
+This view first checks the user is authenticated or not. 
+then it check if the user who is checking his/her students is a teacher or not?
+then after  checking that .
+We ensure that the teacher which is logged in right now we fetch that in and check out for the subject that he/she teaches
+because 'SUBJECT' has link with 'COURSE' and 'SEMESTER' .. and 'STUDENT' are linked with 'COURSE' and 'SEMESTER' so by this property we can get the 
+'STUDENTS' which
+are linked with teacher currently logged in.
+"""
         
 def myStudent(request):
     if request.user.is_authenticated:
@@ -215,9 +231,15 @@ def myStudent(request):
                 teacher = Teacher_Details.objects.all().filter(user=request.user.id)
                 for teacherdetail in teacher:
                     subject_list = []
+                    print(subject_list)
+                    semester_list = []
                     for subjects in teacherdetail.subject_taught.all():
                         subject_list.append(subjects.course_related)
-                    students = Student_Details.objects.filter(course_enrolled__in = subject_list).distinct()
+                        semester_list.append(subjects.semester)
+                    # print(semester_list)
+                    # print(subject_list)
+                    students = Student_Details.objects.filter(course_enrolled__in = subject_list,semester__in = semester_list).distinct()
+                    print(students)
                 return render(request,"teacherStudent/myStudent.html",{"students":students})
             elif group.name == "Admin":
                 students = Student_Details.objects.all()
@@ -226,6 +248,11 @@ def myStudent(request):
                 return redirect("myTeacher")
     else:
         return redirect("signin")
+
+# End of my Student View Function
+
+
+
 
 
 
@@ -446,6 +473,8 @@ def editsubmission(request,id):
     
 
 
+
+
 # This will show student and teacher the assignment which were assigned before and submitted assignment and 
 # For teacher this view will allow to submit correct answers and see submitted answers .. from students. 
 # For Student this view will allow to see the answers that they have submitted and see correct answers.
@@ -519,6 +548,8 @@ def prevassignedtask(request,id):
 
 
 
+
+
 """
 This view will help teacher to see the submission done on the assignment that they have assigned to them
 
@@ -527,15 +558,18 @@ This view will help teacher to see the submission done on the assignment that th
 def viewsubmission(request,id):
     if request.user.is_authenticated:
         template_name = "assignment/viewsubmission.html"
-        data = SubmitAssignment.objects.all().filter(assignment=id)
-        subject = Assignment.objects.get(id=id).name
-        assigned_by = Assignment.objects.get(id=id).assigned_by
-        print(request.user.username)
-        if request.user.username ==  assigned_by.user.username:
-            context  = {"assignments":data,"subject":subject}
-            return render(request, template_name,context)
+        if SubmitAssignment.objects.filter(assignment=id).exists():
+            data = SubmitAssignment.objects.all().filter(assignment=id)
+            subject = Assignment.objects.get(id=id).name
+            assigned_by = Assignment.objects.get(id=id).assigned_by
+            print(request.user.username)
+            if request.user.username ==  assigned_by.user.username:
+                context  = {"assignments":data,"subject":subject}
+                return render(request, template_name,context)
+            else:
+                return redirect("404error")
         else:
-            return redirect("intoassignment")
+            return redirect("404error")
     else:
         return redirect("signin")
 
@@ -575,10 +609,25 @@ def checkassignment(request,id):
                 for assigned_user in assignment:
                     assignment_assigned_user = assigned_user.assigned_by.user
                 if assignment_assigned_user.username == request.user.username:
-                    print("Yes")
-                return render(request,"assignment/checkassignment.html")
+                    fm = AssignmentCheckForm()
+                    
+                    context = {"form":fm}
+                    return render(request,"assignment/checkassignment.html",context)
+                else:
+                    return redirect("intoassignment")
             else:
-                return redirect("intoassignment")
+                return redirect("404error")
     else:
         return redirect("signin")
         
+    
+"""
+Django View Function to Read PDF files
+
+"""
+from django.http import FileResponse
+import os
+
+def show_pdf(request,url):
+    filepath = os.path.join("media",url)
+    return FileResponse(open("filepath",mode="rb"),content_type="application/pdf")
