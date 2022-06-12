@@ -52,6 +52,7 @@ class Student_DetailsAdmin(admin.ModelAdmin):
 @admin.register(Teacher_Details)
 class Teacher_DetailsAdmin(admin.ModelAdmin):
     list_display = [
+        "id",
         "user",
         "address",
         "image",
@@ -62,6 +63,7 @@ class Teacher_DetailsAdmin(admin.ModelAdmin):
 @admin.register(Assignment)
 class AssignmentAdmin(admin.ModelAdmin):
     list_display = [
+        "id",
         'name',
         "dateTime",
         "subject",
@@ -87,4 +89,10 @@ class SubmitAssignmentAdmin(admin.ModelAdmin):
 class AssignmentCheckAdmin(admin.ModelAdmin):
     list_display = [
         "assignment","checked_date","correct_status","suggestion_for_wrong","checked_by"
+    ]
+
+@admin.register(CorrectAnswer)
+class CorrectAnswerAdmin(admin.ModelAdmin):
+    list_display = [
+        "id","assignment","correct_answer","subject"
     ]

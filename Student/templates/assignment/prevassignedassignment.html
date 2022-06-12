@@ -20,7 +20,7 @@
     {% endif %}
     <h1 class="text-center">See Assignment on {{subject}}</h1>
     <div class="row">
-
+            {% if assignments %}
             {% for assignment in assignments %}
             <div class="col-sm-5 offset-sm-1">
                 <div class="card myassignedcard">
@@ -29,15 +29,25 @@
                     {% for group in  request.user.groups.all %}
                     {% if group.name == "Teacher" %}
                     <a href="{% url 'viewsubmission' assignment.id %}" class="btn btn-primary">View Submission</a>
-                    <a href="{% url 'submitanswers' assignment.id %}" class="btn btn-info m-2">Submit Answers</a>
+
+                    <a href="{% url 'submitanswers' assignment.subject.id assignment.id %}" class="btn btn-info m-2">Submit Answers</a>
                     {% else %}
-                    <a href="#" class="btn btn-info">View My Assignment</a>
+                    <a href="#" class="btn btn-info">View My Submisson</a>
                     <a href="#" class="btn btn-warning m-2">View Correct answer</a>
                     {% endif %}
                     {% endfor %}
                 </div>
             </div>
             {%endfor%}
+            {% else %}
+            {% for group in request.user.groups.all %}
+            {% if group.name == "Teacher" %}
+            <p class="display-3">You have assigned no Assignments on {{subject}}</p>
+            {% else %}
+            <p class="display-3">No assignments has been still Assigned on {{subject}}</p>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
 
 
     </div>

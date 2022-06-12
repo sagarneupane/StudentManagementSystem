@@ -123,3 +123,17 @@ class AssignmentCheck(models.Model):
     checked_date = models.DateTimeField(auto_now_add=True)
     correct_status = models.BooleanField()
     suggestion_for_wrong = models.TextField(default=None,blank=True)
+
+from .formatchecker import ContentRestrictiononFileField
+    
+
+class CorrectAnswer(models.Model):
+    assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
+    subject = models.ForeignKey(Stu_Subject, on_delete=models.DO_NOTHING)
+    correct_answer = ContentRestrictiononFileField(upload_to="answers/",content_types =["application/pdf","application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                                                                                        "image/jpeg","image/png","image/JPG","image/jpg"]
+                                                   ,max_upload_size=1480000
+                                                   ,blank=True,null=True)
+    
+    def __str__(self):
+        return self.assignment.name

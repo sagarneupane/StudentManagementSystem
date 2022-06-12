@@ -34,7 +34,6 @@ def pre_save_assignment(sender,instance,*args,**kwargs):
     
 # Signals For STUDENT_DETAILS 
 @receiver(pre_delete,sender=Student_Details)
-
 def post_delete_Student(sender,instance,*args,**kwargs):
     print("I am Before Deleting")
     """Clean Old Image Files"""
@@ -121,19 +120,32 @@ def pre_save_submitassignment(sender,instance,*args,**kwargs):
         pass
 
 
-# @receiver(post_save,sender=AssignmentCheck)
-# def post_save_AssignmentCheck(sender,instance,*args,**kwargs):
-#     try:
-#         print("hello")
-#         assignment = AssignmentCheck.objects.get(id=instance.id).assignment.id
-#         print(assignment)
-#         print("===================================")
+
+@receiver(pre_delete,sender=CorrectAnswer)
+def pre_delete_correctAnswer(sender,instance,*args,**kwargs):
+    try:
         
-#         submitted = SubmitAssignment.objects.get(id=assignment)
-#         print("--------------------------------------------------")
-#         print(submitted)
-#         submitted.check_status = True
-#         submitted.save()
+        instance.correct_answer.delete(save=False)
+    except:
+        pass
+
+@receiver(pre_save,sender=CorrectAnswer)
+def pre_save_correctAnswer(sender,instance,*args,**kwargs):
+    try:
+        print("Yes I am Pre Svae")
+        old_data = instance.__class__.objects.get(id=instance.id).correct_answer.path
+        print("hello world",old_data)
+        try:
+            new_data = instance.correct_answer.path
+            print("inside Try")
+        except:
+            new_data = old_data
+            print("Inside except")
+        if new_data!=old_data:
+            import os
+            print("Hello insied if case")
+            if os.path.exists(old_data):
+                os.remove(old_data)
+    except:
+        pass
         
-#     except:
-#         pass

@@ -1,0 +1,50 @@
+{% extends '../profile.html' %}
+{% load static %}
+{% block title %}Assignments{% endblock title %}
+
+{% block anotherlink %}
+<link rel="stylesheet" href="{% static 'css/assignment/assignment.css' %}">
+{% endblock anotherlink %}
+
+
+{% block profcontent %}
+
+<div class="container subjects">
+    {% if messages %}
+      {% for message in messages %}
+        <h3 class="text-center">
+          {{message}}
+        </h3>
+        {%endfor %}
+    {% endif %}
+    <h1 class="text-center">Submit Your Correct Answer</h1>
+    <div class="row">
+      <form action="" method="POST" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+        {% for fields in form %}
+                        <div class="col-sm-8 mt-3 offset-sm-1">
+                            <span class="deferrors">{{fields.errors|striptags}}</span>
+                            {{fields.label_tag}}
+                            {{fields}}
+                            {{fields.help_text}}
+                            
+                           
+                        </div>
+                        {% endfor %}
+                        <div class="col-sm-8 text-center mt-5 offset-sm-1">
+                          <input type="submit" value="Submit" class="btn btn-success">
+                      </div>
+
+        
+      </form>
+       
+
+
+    </div>
+</div>
+
+
+{% endblock profcontent %}
+
+
+

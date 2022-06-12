@@ -67,4 +67,15 @@ class AssignmentCheckForm(forms.ModelForm):
             "correct_status":"Are all the answers Correct?",
             "suggestion_for_wrong":"Write Reviews to student.."
         }
-        
+    
+class CorrectAnswerForm(forms.ModelForm):
+    class Meta:
+        model = CorrectAnswer
+        fields = ["correct_answer"]
+        labels = {
+            "correct_answer":"Upload Your Correct Answer For Given Question",
+        }
+        help_text = {
+            "correct_answer":"Make Sure That Your answer is correct"  + 
+            "You can Submit Your answer only once.",
+        }

@@ -493,19 +493,19 @@ def prevassignedtask(request,id):
                         for sub in subjectdetail:
                             subcode.append(sub.id)
                         # Filtering out teacher which is logged in and if he/she has gone inside the subject which they are enrolled
-                        teacher = Teacher_Details.objects.all().filter(user=request.user.id,subject_taught__in = subcode)
-                        teacher_username = ""
+                        teacher = Teacher_Details.objects.filter(user=request.user.id,subject_taught__in = subcode)
+                        print(teacher)
+                        teacher_username = 0
                         # If there is any teacher iterating over it and taking out his/her username to check if they are matching with currently logged user or not
                         for teach in teacher:
-                            teacher_username = teach.user.username
-                        # Checking the logged in teacher is true or not after checking if he/she is enrolled in respective subject 
-                        if teacher_username==request.user.username:
-                            template_name = "assignment/prevassignedassignment.html"
-                            data = Assignment.objects.all().filter(subject=id)
-                            context  = {"assignments":data,"subject":subject}
-                            return render(request, template_name,context)
-                        else:
-                            return redirect("intoassignment")
+                            print(teach.id)
+                            teacher_username = teach.id
+                        template_name = "assignment/prevassignedassignment.html"
+                        data = Assignment.objects.filter(subject=id,assigned_by=teacher_username)
+                        context  = {"assignments":data,"subject":subject}
+                        return render(request, template_name,context)
+                        # else:
+                        #     return redirect("intoassignment")
                         
                     # For student Entry in assigned Task for specific subject
                     elif group.name == "Student":
@@ -620,7 +620,75 @@ def checkassignment(request,id):
     else:
         return redirect("signin")
         
+  
+  
+  
+  
+# End of Check Assignment
+
+
+# Start of Correct answer submission
+"""
+The Correct answer submission is to be done by teacher.
+1. First we need to check if the user is teacher or not:
+    a. If User is not teacher the return 404 not found
+    b. If User is a teacher then proceed to logic.
+        i. First check if the user currently logged in has assigned the given assignment or not.
+        ii.  
+"""
+
+def CorrectAnswerSubmission(request,sub_id,ass_id):
+    if request.user.is_authenticated:
+        
+        for group in request.user.groups.all():
+            if group.name == "Teacher":
+                
+                if Assignment.objects.filter(id=ass_id).exists():
+                    assignment = Assignment.objects.get(id=ass_id)
+                    if request.user.username == Assignment.objects.get(id=ass_id).assigned_by.user.username:
+                        correct_answers = CorrectAnswer.objects.filter(assignment=ass_id)
+                        if correct_answers:
+                            correct_answer = CorrectAnswer.objects.get(assignment=ass_id)
+                            if request.method=="POST":
+                                fm = CorrectAnswerForm(request.POST,request.FILES,instance=correct_answer)
+                                updated_data = request.FILES.get("correct_answer")
+                                if fm.is_valid():
+                                    data = fm.save(commit=False)
+                                    data.assignment = assignment
+                                    data.subject = Stu_Subject.objects.get(id=sub_id)
+                                    data.save()
+                                    messages.success(request, "Answer Submission Successfull")
+                                    return redirect("intoassignment")
+                            else:
+                                fm = CorrectAnswerForm(instance=correct_answer)
+                            context = {"form":fm}
+                            return render(request,'assignment/correctsubmission.html',context)
+                            
+                        else:
+                            if request.method=="POST":
+                                fm = CorrectAnswerForm(request.POST,request.FILES)
+                                if fm.is_valid():
+                                    data = fm.save(commit=False)
+                                    data.assignment = assignment
+                                    data.subject = Stu_Subject.objects.get(id=sub_id)
+                                    data.save()
+                                    messages.success(request, "Answer Submission Successfull")
+                                    return redirect("intoassignment")
+                            else:
+                                fm = CorrectAnswerForm()
+                            context = {"form":fm}
+                            return render(request,'assignment/correctsubmission.html',context)
+                    else:
+                        return redirect("404error")
+                else:
+                    return redirect("404error")
+            else:
+                return redirect("404error")
+    else:
+        return redirect("signin")
+        
     
+  
 """
 Django View Function to Read PDF files
 
