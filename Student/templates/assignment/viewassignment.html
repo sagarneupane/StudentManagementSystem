@@ -21,7 +21,7 @@
     <div class="row">
         {% if assignments %}
         {% for assignment in assignments %}
-            <div class="col-sm-5 subjects offset-sm-1">
+            <div class="col-sm-5 subjects offset-sm-1 mb-5">
                 <table class="table-hover table ">
 
                     
@@ -53,7 +53,7 @@
                     <tr>
                         <th>Want To Submit answer?</th>
                         <td>
-                            <a href="{% url 'submitassignment' assignment.id %}">Click Here to Submit Your  Answer</a>
+                            <a href="{% url 'submitassignment' sub_id assignment.id %}">Click Here to Submit Your  Answer</a>
                         </td>
                     </tr>
                     <tr>
@@ -63,7 +63,7 @@
                             You have Edited {{submission.edited}} times.You can edit 4 times only
                             
                         </th>
-                        <td>Want to edit your submission?<a href="{% url 'editsubmission' submission.id %}">Click Here</a></td>
+                        <td>Want to edit your submission?<a href="{% url 'editsubmission' sub_id assignment.id submission.id %}">Click Here</a></td>
 
                         {% endif %}
                         {% endfor %}

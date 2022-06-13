@@ -3,9 +3,9 @@ from .forms import *
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate,login,logout,update_session_auth_hash
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User,Group
 from .models import *
-
+from django.urls import reverse
 
 # Create your views here.
 def dashboard(request):
@@ -76,50 +76,25 @@ def editProfile(request,id=0):
 # from operator import attrgetter
 
 def viewProfile(request,id=0):
-    
     if request.user.is_authenticated:
-        users = User.objects.filter(id=request.user.id)
-        fields  = [f.name for f in User._meta.get_fields()]
-        for f in fields:
-            fields.pop(0)
-            if f=="id":
-                break
-        # fields.pop(0)
-        print(fields)
-        userdata = {}
-        groups_check = []
-        for field in fields:
-            if field == "password":
-                continue
-            if field == "groups":
-                mygrp = []
-                for user in users:
-                    for group in user.groups.all():
-                        mygrp.append(group)
-                        groups_check.append(str(group)) 
-            
-                userdata[field] = mygrp
-            if field == "user_permissions":
-                mypermissions = []
-                for user in users:
-                    for permission in user.user_permissions.all():
-                        mypermissions.append(permission)
-                userdata[field] = mypermissions
-                    
-            else:
-                for user in users:
-                    userdata[field]=getattr(user,field)
-        for group in request.user.groups.all():
-            print(type(group.name))
-        return render(request,"viewprofile.html",{"userdata":userdata,"groups_check":groups_check})
+        user = User.objects.get(id=request.user.id)
+        user_group = Group.objects.get(user=user.id)
+        context = {"thisuser":user,"user_group":user_group}
+        
+        if user_group.name == "Student":
+            student_details = Student_Details.objects.get(user=request.user.id)
+            context["data"] = student_details
+        if user_group.name == "Teacher":
+            teacher_details = Teacher_Details.objects.get(user=request.user.id)
+            context["data"] = teacher_details
+        
+        return render(request,"viewprofile.html",context)
     else:
         return redirect("signin")
 
 
 """
 404 Error Page
-
-
 """
 def page_not_found(request):
     return render(request,"404page/404_err.html")
@@ -255,6 +230,14 @@ def myStudent(request):
 
 
 
+"""
+Function That get triggred when anyone clicks assignment navbar(Any logged user can do it.)
+This function returns the template which loads the subject that is been assigned to the teacher and the sudent. 
+--> For Student the all the subjects will be shown according to semester they are currently on
+--> For Teacher the subjects will be shown according to the subjects that teacher taught irrespective of semester
+    -> this is beacause one teacher can teach the subjects that are in cross semester also
+
+"""
 
 def IntoAssignment(request):
     if request.user.is_authenticated:
@@ -280,6 +263,10 @@ def IntoAssignment(request):
     else:
         return redirect("signin")
 
+
+"""
+Assigning The Assignment To a subject(Done By Teacher's only to their subjects.)
+"""
 def assigntask(request,id):
     if request.user.is_authenticated:
         for group in request.user.groups.all():
@@ -309,7 +296,7 @@ def assigntask(request,id):
                             return redirect("intoassignment")
                     else:
                         fm = AssignmentForm()
-                    return render(request,'assignment/assigntask.html',{"form":fm})
+                    return render(request,'assignment/assigntask.html',{"form":fm,"edit":False})
                 else:
                     return redirect("intoassignment")
             else:
@@ -318,6 +305,9 @@ def assigntask(request,id):
         return redirect("signin")
 
 
+"""
+Viewing Assignment (Done By both Teacher and Student)
+"""
 def viewassignment(request,id):
     if request.user.is_authenticated:
         for group in request.user.groups.all():
@@ -347,7 +337,7 @@ def viewassignment(request,id):
                         # print(type(Student_Details.objects.get(user=request.user.id)))
                         submitted_assignments = SubmitAssignment.objects.all().filter(submitted_by=request.user.id,assignment=ass_id)
                         print(submitted_assignments)
-                        context = {"subject_name":subject_name,"assignments":assignments,"submitted_assignments":submitted_assignments}
+                        context = {"subject_name":subject_name,"assignments":assignments,"submitted_assignments":submitted_assignments,"sub_id":id}
                         return render(request,'assignment/viewassignment.html',context)
                     else:
                         return redirect("intoassignment")
@@ -359,113 +349,135 @@ def viewassignment(request,id):
         return redirect("signin")
 
 
-def submitassignment(request,id):
+"""
+Editing Assignment(Done By Teacher's only)
+assignment -> see prev assigned task -> edit 
+
+"""
+def editassignment(request,id):
+    if request.user.is_authenticated:
+        if Assignment.objects.filter(id=id).exists():
+            assignment = Assignment.objects.get(id=id)
+            if request.user.username == assignment.assigned_by.user.username:
+                if request.method=="POST":
+                    fm = AssignmentForm(request.POST,request.FILES,instance=assignment)
+                    update_file = request.FILES.get("assigned_data")
+                    if fm.is_valid():
+                        data = fm.save(commit=False)
+                        data.assigned_data = update_file
+                        data.save()
+                        messages.success(request,f"Assignment {assignment.name} Successfully Edited")
+                        return redirect("intoassignment")
+                else:
+                    fm = AssignmentForm(instance=assignment)
+                context = {"form":fm,"edit":True}
+                return render(request,'assignment/assigntask.html',context)
+            else:
+                # return redirect("viewassignment",id)
+                return redirect("404error")
+        else:
+            return redirect("404error")
+    else:
+        return redirect("signin")
+
+# End of Editing Assignment
+
+
+"""
+Done by Students. on the subjects they have been enrolled.
+"""
+def submitassignment(request,sub_id,id):
     if request.user.is_authenticated:
         for group in request.user.groups.all():
             if group.name =="Student":
-                assignment = Assignment.objects.all().filter(id=id)
-                sub_id = 0
-                for ass in assignment:
-                    sub_id = ass.subject
-                subject = Stu_Subject.objects.all().filter(subject_code=sub_id)
-                subject_name = ""
-                subject_course = ""
-                semester =  ""
-                subject_code = ""
-                for subj in subject:
-                    subject_name = subj.subject_name
-                    subject_course = subj.course_related
-                    semester = subj.semester
-                    # subject_code = subj.subject_code
-                if subject_course != "":
-                    student = Student_Details.objects.all().filter(user=request.user.id,semester=semester,course_enrolled=subject_course)
-                    myuser = ""
-                    for stu in student:
-                        myuser = stu.user
-                    print(myuser)
-                    submisson_exists = SubmitAssignment.objects.all().filter(submitted_by=request.user.id,assignment=id)
-                    if submisson_exists:
-                        sub_id = 0
-                        for submission in submisson_exists:
-                            sub_id = submission.id
-                        # editsubmission = "editsubmission"
-                        return redirect(f'../editsubmission/{sub_id}')
-                    else:
-                        if myuser!="":
-                            if request.method == "POST":
-                                fm = SubmitAssignmentForm(request.POST,request.FILES)
-                                if fm.is_valid:
-                                    data = fm.save(commit=False)
-                                    data.submitted_by = User.objects.get(id = request.user.id)
-                                    
-                                    data.assignment = Assignment.objects.get(id=id)
-                                    data.save()
-                                    messages.success(request,"Assignment Successfully Submitted")
-                                    return redirect("intoassignment")
+                
+                if Stu_Subject.objects.filter(id=sub_id).exists():
+                    subject = Stu_Subject.objects.get(id=sub_id)
+                    subject_name = subject.subject_name
+                    subject_course = subject.course_related
+                    semester = subject.semester
+                    if Student_Details.objects.filter(user=request.user.id,semester=semester,course_enrolled=subject_course).exists():
+                        student = Student_Details.objects.get(user=request.user.id,semester=semester,course_enrolled=subject_course)
+                        
+                        if Assignment.objects.filter(id=id,subject=sub_id).exists(): 
+                            if SubmitAssignment.objects.filter(submitted_by=request.user.id,assignment=id).exists():
+                                submisson_exists = SubmitAssignment.objects.get(submitted_by=request.user.id,assignment=id)
+                                submission_id = submisson_exists.id
+                                return redirect('editsubmission',sub_id,id,submission_id)
+                                
                             else:
-                                fm = SubmitAssignmentForm()
-                            context = {"form":fm}
-                            return render(request,'assignment/submitassignment.html',context)
+                                if request.method == "POST":
+                                    fm = SubmitAssignmentForm(request.POST,request.FILES)
+                                    if fm.is_valid:
+                                        data = fm.save(commit=False)
+                                        data.submitted_by = User.objects.get(id = request.user.id)
+                                        
+                                        data.assignment = Assignment.objects.get(id=id)
+                                        data.save()
+                                        messages.success(request,"Assignment Successfully Submitted")
+                                        return redirect("intoassignment")
+                                else:
+                                    fm = SubmitAssignmentForm()
+                                context = {"form":fm,"edit":False}
+                                return render(request,'assignment/submitassignment.html',context)
                         else:
-                            return redirect("intoassignment")
+                            return redirect("404error")
+                    else:
+                        return redirect("404error")
                 else:
-                    return redirect("intoassignment")
+                    return redirect("404error")
             else:
                 return redirect("intoassignment")
     else:
         return redirect("signin")
     
 
-def editsubmission(request,id):
+
+
+"""
+Done by Students. They edit their previous submission
+"""
+def editsubmission(request,sub_id,id,submission_id):
     if request.user.is_authenticated:
         for group in request.user.groups.all():
             if group.name =="Student":
-                assig_id = 0 
-                submission = SubmitAssignment.objects.all().filter(id=id)
-                for submi in submission:
-                    assig_id = submi.assignment
-                assignment = Assignment.objects.all().filter(name=assig_id)
-                sub_id = 0
-                for ass in assignment:
-                    sub_id = ass.subject
-                subject = Stu_Subject.objects.all().filter(subject_code=sub_id)
-                subject_name = ""
-                subject_course = ""
-                semester =  ""
-                subject_code = ""
-                for subj in subject:
-                    subject_name = subj.subject_name
-                    subject_course = subj.course_related
-                    semester = subj.semester
-                    # subject_code = subj.subject_code
-                if subject_course != "":
-                    student = Student_Details.objects.all().filter(user=request.user.id,semester=semester,course_enrolled=subject_course)
-                    myuser = ""
-                    for stu in student:
-                        myuser = stu.user
-                    print(myuser)
-                    if myuser!="":
-                        assignmentinstance = SubmitAssignment.objects.get(pk=id)
-                        if request.method == "POST":
-                            fm = SubmitAssignmentForm(request.FILES,request.POST,instance=assignmentinstance)
-                            updated_data = request.FILES.get("submitted_data")
-                            if fm.is_valid:
-                                data = fm.save(commit=False)
-                                data.submitted_data = updated_data
-                                data.submitted_by = User.objects.get(id = request.user.id)
-                                # data.assignment = Assignment.objects.get(id=assig_id)
-                                data.save()
-                                messages.success(request,"Assignment Successfully Submitted")
-                                return redirect("intoassignment")
+                
+                if Stu_Subject.objects.filter(id=sub_id).exists():
+                    subject = Stu_Subject.objects.get(id=sub_id)
+                    subject_name = subject.subject_name
+                    subject_course = subject.course_related
+                    semester = subject.semester
+                    if Student_Details.objects.filter(user=request.user.id,semester=semester,course_enrolled=subject_course).exists():
+                        student = Student_Details.objects.get(user=request.user.id,semester=semester,course_enrolled=subject_course)
+                        
+                        if Assignment.objects.filter(id=id,subject=sub_id).exists(): 
+                            if not SubmitAssignment.objects.filter(submitted_by=request.user.id,assignment=id).exists():
+                                return redirect('submitassignment',sub_id,id)
+                                
+                            else:
+                                assignmentinstance = SubmitAssignment.objects.get(pk=submission_id)
+                                if request.method == "POST":
+                                    fm = SubmitAssignmentForm(request.FILES,request.POST,instance=assignmentinstance)
+                                    updated_data = request.FILES.get("submitted_data")
+                                    if fm.is_valid:
+                                        data = fm.save(commit=False)
+                                        data.submitted_data = updated_data
+                                        data.submitted_by = User.objects.get(id = request.user.id)
+                                        # data.assignment = Assignment.objects.get(id=assig_id)
+                                        data.save()
+                                        messages.success(request,"Assignment Successfully Submitted")
+                                        return redirect("intoassignment")
+                                else:
+                                    # print(assignmentinstance.submitted_data)
+                                    fm = SubmitAssignmentForm(instance=assignmentinstance)
+                                context = {"form":fm,"edit":True}
+                                return render(request,'assignment/submitassignment.html',context)
                         else:
-                            print(assignmentinstance.submitted_data)
-                            fm = SubmitAssignmentForm(instance=assignmentinstance)
-                        context = {"form":fm,"value":"edit"}
-                        return render(request,'assignment/submitassignment.html',context)
+                            return redirect("404error")
                     else:
-                        return redirect("intoassignment")
+                        return redirect("404error")
                 else:
-                    return redirect("intoassignment")
+                    return redirect("404error")
             else:
                 return redirect("intoassignment")
     else:
@@ -528,6 +540,18 @@ def prevassignedtask(request,id):
                         if student_username == request.user.username:
                             template_name = "assignment/prevassignedassignment.html"
                             data = Assignment.objects.all().filter(subject=id)
+                            # assignment = Assignment.objects.get(subject=id)
+                            
+                            # my_submission = None
+                            # if SubmitAssignment.objects.filter(assignment=assignment.id,submitted_by=request.user.id).exists():
+                            #     my_submission = SubmitAssignment.objects.get(assignment=assignment.id,submitted_by=request.user.id)
+                            #     print(my_submission.submitted_data.url)
+                            
+                            # correct_answer = None
+                            # if CorrectAnswer.objects.filter(assignment=assignment.id,subject=id).exists():
+                            #     correct_answer = CorrectAnswer.objects.get(assignment=assignment.id,subject=id)
+                            #     print(correct_answer.correct_answer.url)
+                                      
                             context  = {"assignments":data,"subject":subject}
                             return render(request, template_name,context)
                         else:
@@ -547,6 +571,63 @@ def prevassignedtask(request,id):
 # End of Previous assigned Task
 
 
+# Previously assigned task details... Student see this function
+
+
+def prev_assigned_task_detail(request,sub_id,ass_id):
+    if request.user.is_authenticated:
+        for group in request.user.groups.all():
+            if group.name =="Student":
+                
+                if Stu_Subject.objects.filter(id=sub_id).exists():
+                    subject = Stu_Subject.objects.get(id=sub_id)
+                    subject_name = subject.subject_name
+                    subject_course = subject.course_related
+                    semester = subject.semester
+                    if Student_Details.objects.filter(user=request.user.id,semester=semester,course_enrolled=subject_course).exists():
+                        student = Student_Details.objects.get(user=request.user.id,semester=semester,course_enrolled=subject_course)
+                        
+                        template_name = "assignment/viewtaskdetails.html"
+                        # submission = False
+                        submission_data = None
+                        correct_data = None
+                        assigned_data= None
+                        review_on_submission = None
+                        if Assignment.objects.filter(id=ass_id,subject=sub_id).exists():
+                            assigned_data = Assignment.objects.get(id=ass_id,subject=sub_id)
+                            if SubmitAssignment.objects.filter(submitted_by=request.user.id,assignment=ass_id).exists():
+                                submission_data = SubmitAssignment.objects.get(submitted_by=request.user.id,assignment=ass_id)
+
+                                if AssignmentCheck.objects.filter(assignment=submission_data.id).exists():
+                                    review_on_submission = AssignmentCheck.objects.get(assignment=submission_data.id)
+                                
+                               
+                            else:
+                                pass
+                            
+                            if CorrectAnswer.objects.filter(subject=sub_id,assignment=ass_id).exists():
+                                correct_data = CorrectAnswer.objects.get(subject=sub_id,assignment=ass_id)
+                                print(correct_data.correct_answer)
+                            else:
+                                pass
+                            
+                            context = {
+                                        "submission_data":submission_data,
+                                        "correct_data":correct_data,"assigned_data":assigned_data,
+                                        "review_on_submission":review_on_submission,
+                                       }    
+                            return render(request,template_name,context)
+                        else:
+                            return redirect("404error")
+                    else:
+                        return redirect("404error")
+                else:
+                    return redirect("404error")
+            else:
+                return redirect("intoassignment")
+    else:
+        return redirect("signin")
+    
 
 
 
@@ -594,27 +675,52 @@ Procedures:
 4. If there exists we need to check if the teacher currently logged in is that teacher which is enrolled or not.
 5. If all these procedures are verified then it will allow teacher to check assignment
 """
-def checkassignment(request,id):
+def checkassignment(request,ass_id,sub_id):
     if request.user.is_authenticated:
         for group in request.user.groups.all():
             if group.name =="Teacher":
                 assig_id = 0 
-                submission = SubmitAssignment.objects.all().filter(id=id)
-                for submi in submission:
-                    assig_id = submi.assignment
-                assignment = Assignment.objects.all().filter(name=assig_id)
-                print(assignment)
-                print(submission)
-                assignment_assigned_user = ""
-                for assigned_user in assignment:
-                    assignment_assigned_user = assigned_user.assigned_by.user
-                if assignment_assigned_user.username == request.user.username:
-                    fm = AssignmentCheckForm()
-                    
-                    context = {"form":fm}
-                    return render(request,"assignment/checkassignment.html",context)
+                
+                if Assignment.objects.filter(id=ass_id).exists() and SubmitAssignment.objects.filter(id=sub_id).exists():
+                    assignment = Assignment.objects.get(id=ass_id)
+                    submission = SubmitAssignment.objects.get(id=sub_id)
+                    if assignment.assigned_by.user.username == request.user.username:
+                        if not AssignmentCheck.objects.filter(assignment=sub_id,checked_by=request.user.id).exists():
+                            if request.method=="POST":
+                                fm = AssignmentCheckForm(request.POST)
+                                if fm.is_valid():
+                                    data = fm.save(commit=False)
+                                    data.checked_by = User.objects.get(id=request.user.id)
+                                    data.assignment = SubmitAssignment.objects.get(id=sub_id)
+
+                                    data.save()
+                                    messages.success(request,"Review Successfully Given")
+                                    return redirect("viewsubmission",ass_id)
+                            else:
+                                fm = AssignmentCheckForm()
+                            context = {"form":fm,"edit":False,"submission":submission}
+                            return render(request,"assignment/checkassignment.html",context)
+                        else:
+                            review = AssignmentCheck.objects.get(assignment=sub_id,checked_by=request.user.id)
+                            if request.method=="POST":
+                                fm = AssignmentCheckForm(request.POST,instance=review)
+                                if fm.is_valid():
+                                    data = fm.save(commit=False)
+                                    data.checked_by = User.objects.get(id=request.user.id)
+                                    data.assignment = SubmitAssignment.objects.get(id=sub_id)
+
+                                    data.save()
+                                    messages.success(request,"Review Successfully Updated")
+                                    
+                                    return redirect("viewsubmission",ass_id)
+                            else:
+                                fm = AssignmentCheckForm(instance=review)
+                            context = {"form":fm,"edit":True,"submission":submission}
+                            return render(request,"assignment/checkassignment.html",context)
+                    else:
+                        return redirect("intoassignment")
                 else:
-                    return redirect("intoassignment")
+                    return redirect("404error")
             else:
                 return redirect("404error")
     else:
@@ -689,13 +795,5 @@ def CorrectAnswerSubmission(request,sub_id,ass_id):
         
     
   
-"""
-Django View Function to Read PDF files
+# End of CorrectAnswerSubmission
 
-"""
-from django.http import FileResponse
-import os
-
-def show_pdf(request,url):
-    filepath = os.path.join("media",url)
-    return FileResponse(open("filepath",mode="rb"),content_type="application/pdf")

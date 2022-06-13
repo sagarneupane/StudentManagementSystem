@@ -25,15 +25,15 @@
             <div class="col-sm-5 offset-sm-1">
                 <div class="card myassignedcard">
                     <h5 class="card-title">{{assignment.name}} on {{assignment.dateTime|date:"D,d M , Y"}}</h5>
-                    <p class="card-text"><a href="{{assignment.assigned_data.url}}" target="_blank">Click Here to download File</a></p>
+                    <p class="card-text"><a href="{{assignment.assigned_data.url}}" target="_blank">Click Here to Download Question</a></p>
                     {% for group in  request.user.groups.all %}
                     {% if group.name == "Teacher" %}
-                    <a href="{% url 'viewsubmission' assignment.id %}" class="btn btn-primary">View Submission</a>
-
-                    <a href="{% url 'submitanswers' assignment.subject.id assignment.id %}" class="btn btn-info m-2">Submit Answers</a>
+                    <a href="{% url 'editassignment' assignment.id %}" class="btn btn-info m-2">Edit </a>
+                    <a href="{% url 'viewsubmission' assignment.id %}" class="btn btn-primary m-2">View Submission</a>
+                    <a href="{% url 'submitanswers' assignment.subject.id assignment.id %}" class="btn btn-warning m-2">Submit Answers</a>
                     {% else %}
-                    <a href="#" class="btn btn-info">View My Submisson</a>
-                    <a href="#" class="btn btn-warning m-2">View Correct answer</a>
+                    <a href="{% url 'prevassignedtaskdetail' assignment.subject.id assignment.id %}" class="btn btn-info m-2">View Details</a>
+                    
                     {% endif %}
                     {% endfor %}
                 </div>

@@ -11,6 +11,6 @@
 {% block content %}
     <h1>Hi {{request.user.username}} How are You Welcome to Interface</h1>
     <a href="{% url 'signin' %}" class="btn btn-info">Login</a>
-    <a href="{% url 'signup' %}" class="btn btn-primary">Register</a>
+    {% comment %} <a href="{% url 'signup' %}" class="btn btn-primary">Register</a> {% endcomment %}
 {% endblock content %}
     

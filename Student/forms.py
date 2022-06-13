@@ -3,8 +3,8 @@ from django.contrib.auth.models import User
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from .models import *
-
-
+from datetimewidget.widgets import DateTimeWidget
+from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 
 class RegisterUser(UserCreationForm):
     
@@ -38,15 +38,25 @@ class DateInput(forms.DateInput):
 class TimeInput(forms.TimeInput):
     input_type = 'time'
 
+class DateTimeInput(forms.DateTimeInput):
+    input_type = "datetime"
+
 class AssignmentForm(forms.ModelForm):
+    
     class Meta:
         model =  Assignment
-        fields = ["name","assigned_data","posting_date","posting_time"]
+        fields = ["name","assigned_data","posting_date","posting_time","submission_deadline"]
+        dateTimeOptions = {
+        'format': 'mm/dd/yyyy HH:ii P',
+        'autoclose': True,
+        'showMeridian' : True
+        }
         widgets = {
             "name":forms.TextInput(attrs={"class":"form-control myinput","placeholder":"Enter Assignment Name: Practice Question"}),
             "assigned_data":forms.FileInput(attrs={"class":"form-control myimage"}),
             "posting_date":DateInput(attrs={"class":"form-control mydateinput"}),
             "posting_time":TimeInput(attrs={"class":"form-control mytimeinput"}),
+            "submission_deadline":DateTimePickerInput()
         }
         
 class SubmitAssignmentForm(forms.ModelForm):

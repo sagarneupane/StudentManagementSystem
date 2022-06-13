@@ -20,16 +20,92 @@
 
 <table class="table table-bordered">
     <thead>
-        <h1 class="display-3">User</h1>
+        <h1 >User Details</h1>
         {% if user.first_name == "" and user.last_name == "" %}
         <h2>{{user.username}}</h2>
         {% else %}
         <h2>{{user.first_name}} {{user.last_name}}</h2>
         {% endif %}
     </thead>
-    {% for datadesc,data in userdata.items %}
-   
+    {% comment %} {% for datadesc,data in userdata.items %} {% endcomment %}
     <tr>
+        <th>Full Name</th>
+        {% if user.first_name == "" or user.last_name == "" %}
+        <td><span id="notset">Name Not Set</span></td>
+        {% else %}
+        <td>{{user.first_name}} {{user.last_name}}</td>
+        {% endif %}
+    </tr>
+
+        <tr>
+            <th>Email</th>
+            {% if user.email == "" %}
+            <td><span id="notset">NotSet</span></td>
+            {% else %}
+            <td>{{user.email}}</td>
+            {% endif %}
+        </tr>
+        <tr>
+            <th>Role</th>
+            {% if user_group.name == "" %}
+            <td><span id="notset">NotSet</span></td>
+            {% else %}
+            <td>{{user_group.name}}</td>
+            {% endif %}
+        </tr>
+        <tr>
+            <th>Address</th>
+            {% if data.address == "" %}
+            <td><span id="notset">NotSet</span></td>
+            {% else %}
+            <td>{{data.address}}</td>
+            {% endif %}
+        </tr>
+        <tr>
+            <th>Date Joined</th>
+            <td>{{user.date_joined}}</td>
+        </tr>
+
+        {% if user_group.name == "Student" %}
+        <tr>
+            <th>Currently On</th>
+            <td>{{data.semester}}</td>
+        </tr>
+        <tr>
+            <th>Course Taken</th>
+            <td>{{data.course_enrolled}}</td>
+        </tr>
+        <tr>
+            <th>Previous College</th>
+            <td>{{data.previous_college}}</td>
+        </tr>
+        <tr>
+            <th>Admission Date</th>
+            <td>{{data.admission_date}}</td>
+        </tr>
+
+        {% elif user_group.name == "Teacher" %}
+        <tr>
+            <th>Subject Taught</th>
+            <td>
+            {% for subject in data.subject_taught.all %}
+
+            <span id="notset" class="p-2 m-1">{{subject.subject_name}}</span>
+            {% endfor %}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <th>Admin</th>
+            <td>Manages all </td>
+        </tr>
+        {% endif %}
+
+        <tr>
+            <th>Picture</th>
+            <td><a href="{{data.image.url}}" target="_blank"><img src="{{data.image.url}}" alt="" height="100px" width="100px" class="img-float"></a></td>
+        </tr>
+
+    {% comment %} <tr>
         
         {% if datadesc == "groups" %}
         <th>{{datadesc}}</th> 
@@ -42,9 +118,6 @@
          {% endfor %}
         
          {% elif datadesc == "user_permissions" or datadesc == "id" %}
-         {% comment %} {% for permission in user.user_permissions.all %}
-         <td>{{permission}}</td> {% endcomment %}
-         {% comment %} {% endfor %} {% endcomment %}
         {% else %}
         <th>{{datadesc}}</th>
 
@@ -67,7 +140,7 @@
 
 
     </tr>
-    {% endfor %}
+    {% endfor %} {% endcomment %}
 </table>
 
 </div>

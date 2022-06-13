@@ -18,9 +18,9 @@
             {%else%}
             {% endif %}
             {% endfor %}
-            <a href=""><li><i class="fa-solid fa-hand-holding-dollar"></i></i>Accounts</li></a>
+            {% comment %} <a href=""><li><i class="fa-solid fa-hand-holding-dollar"></i></i>Accounts</li></a> {% endcomment %}
             <a href="{% url 'viewCourse' %} "><li><img src="{% static 'img/course.png' %}" alt="" height="35px" width="35px">   Course</li></a>
-            <a href=""><li><i class="fa-solid fa-business-time"></i>Others</li></a>
+            {% comment %} <a href=""><li><i class="fa-solid fa-business-time"></i>Others</li></a> {% endcomment %}
             
         </ul>
     </div>

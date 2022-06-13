@@ -23,6 +23,11 @@
         {% csrf_token %}
         {% for fields in form %}
                         <div class="col-sm-8 mt-3 offset-sm-1">
+                          {% if edit %}
+                          {% if fields.name == "submitted_data" %}
+                          <a href="{{fields.value.url}}" target="_blank">Click Here to Download Your Previous File</a>
+                          {% endif %}
+                          {% endif %}
                             {{fields.label_tag}}
                             {{fields}}
                 

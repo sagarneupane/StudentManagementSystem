@@ -98,6 +98,7 @@ class Assignment(models.Model):
     assigned_data = models.FileField(upload_to="assignment/")
     posting_date = models.DateField()
     posting_time = models.TimeField()
+    submission_deadline = models.DateTimeField()
     
     def __str__(self):
         return self.name
@@ -111,12 +112,14 @@ class SubmitAssignment(models.Model):
     edited = models.IntegerField(default=0)
 
     def submision_name(self):
-        return f'{self.assignment} {self.submitted_by}'
+        return f'{self.assignment} submitted by {self.submitted_by}'
     
     def __str__(self):
-        return self.assignment.name
+        return f"{self.assignment.name} by {self.submitted_by.username}"
+
 
 class AssignmentCheck(models.Model):
+    # checked_submission = models.ForeignKey(SubmitAssig, on_delete)
     assignment = models.ForeignKey(SubmitAssignment, on_delete=models.CASCADE)
     checked_by = models.ForeignKey(User, on_delete=models.SET_NULL,null=True)
     checked_status = models.BooleanField(auto_created=True,default=True)
@@ -128,6 +131,7 @@ from .formatchecker import ContentRestrictiononFileField
     
 
 class CorrectAnswer(models.Model):
+    
     assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
     subject = models.ForeignKey(Stu_Subject, on_delete=models.DO_NOTHING)
     correct_answer = ContentRestrictiononFileField(upload_to="answers/",content_types =["application/pdf","application/vnd.openxmlformats-officedocument.wordprocessingml.document",

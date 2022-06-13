@@ -11,13 +11,13 @@
 {% block profcontent %}
 
 <div class="container subjects">
-    {% if messages %}
+    {% comment %} {% if messages %}
       {% for message in messages %}
         <h3 class="text-center">
           {{message}}
         </h3>
         {%endfor %}
-    {% endif %}
+    {% endif %} {% endcomment %}
     <h1 class="text-center">See Submission on {{subject}}</h1>
     <div class="row">
 
@@ -49,15 +49,10 @@
                     <th>
                       Give Review
                     </th>
-                    <td><a href="{% url 'checkassignment' assignment.id  %}">Click Here to Give Review</a></td>
+                    <td><a href="{% url 'checkassignment' assignment.assignment.id assignment.id  %}">Click Here to Give Review</a></td>
                   </tr>
                </table>
 
-               {% comment %} <object data="{{assignment.submitted_data.url}}" type="application/ppt">
-                <div>
-                  No online PPT viewer installed
-                </div>
-               </object> {% endcomment %}
             </div>
             {%endfor%}
 

@@ -11,18 +11,32 @@
 {% block profcontent %}
 
 <div class="container subjects">
-    {% if messages %}
-      {% for message in messages %}
-        <h3 class="text-center">
-          {{message}}
-        </h3>
-        {%endfor %}
-    {% endif %}
-    <h1 class="text-center">Give Reviews On</h1>
+  {% if not edit %}
+  <h1 class="text-center">Give Reviews On </h1>
+
+  {% else %}
+  <h1 class="text-center">Edit Reviews On</h1>
+  {% endif %}
+  <h2 class="text-center">{{submission.assignment}}</h2>
+  <h3 class="text-center">Submitted By: {{submission.submitted_by.first_name}} {{submission.submitted_by.last_name}}</h3>
+    
     <div class="row">
-
-      {{form}}
-
+      <form action="" method="post">
+        {% csrf_token %}
+      
+      {{form.non_field_errors}}
+      {% for fields in form %}
+      <div class="offset-sm-4 col-sm-6">
+        {{fields.label_tag}}
+        {{fields}}
+        <span class="deferrors">{{fields.errors|striptags}}</span>
+      </div>
+      
+      {% endfor %}
+      <div class="col-sm-6 offset-sm-3 text-center">
+        <input type="submit" value="Give Review" class="btn btn-success">
+      </div>
+    </form>
     </div>
 </div>
 

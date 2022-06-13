@@ -4,6 +4,9 @@
 
 {% block anotherlink %}
 <link rel="stylesheet" href="{% static 'css/assignment/assignment.css' %}">
+
+
+
 {% endblock anotherlink %}
 
 
@@ -17,15 +20,26 @@
         </h3>
         {%endfor %}
     {% endif %}
+    
+    {% if edit %}
+      <h1><h1 class="text-center">Edit Assignment Assigned</h1></h1>
+    
+    {%else%}
     <h1 class="text-center">Give Assignment To Student</h1>
+    {% endif %}
     <div class="row">
       <form action="" method="POST" enctype="multipart/form-data" novalidate>
         {% csrf_token %}
         {% for fields in form %}
                         <div class="col-sm-8 mt-3 offset-sm-1">
+                          {% if edit %}
+                          {% if fields.name == "assigned_data" %}
+                          <a href="{{fields.value.url}}" target="_blank">Click Here to View previous File {{fields.value}}</a>
+                          {% endif %}
+                          {% endif %}
                             {{fields.label_tag}}
                             {{fields}}
-                
+
                             <span class="deferrors">{{fields.errors|striptags}}</span>
                         </div>
                         {% endfor %}

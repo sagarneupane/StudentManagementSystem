@@ -71,6 +71,7 @@ class AssignmentAdmin(admin.ModelAdmin):
         "assigned_data",
         "posting_date",
         "posting_time",
+        "submission_deadline",
     ]
 
 @admin.register(SubmitAssignment)

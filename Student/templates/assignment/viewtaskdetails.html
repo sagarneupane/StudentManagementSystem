@@ -1,0 +1,87 @@
+{% extends '../profile.html' %}
+{% load static %}
+{% block title %}Assignments{% endblock title %}
+
+{% block anotherlink %}
+<link rel="stylesheet" href="{% static 'css/assignment/assignment.css' %}">
+
+
+
+{% endblock anotherlink %}
+
+
+{% block profcontent %}
+
+<div class="container subjects">
+
+    <div class="row">
+        <table class="table table-bordered">
+            <thead class="text-center"><h1 class="text-center">View Details of assignment {{assigned_data.name}}</h1></thead>
+            
+            <tr>
+                <th>Question</th>
+                <td><a href="{{assigned_data.assigned_data.url}}" target="_blank">Click her to Download Question</a></td>
+            </tr>
+            <tr>
+                <th>Your Submitted Data</th>
+                {% if submission_data %}
+                <td><a href="{{submission_data.submitted_data.url}}" target="_blank">Click Here to download your submission</a></td>
+                {% else %}
+                <td>Your Submission Data Doesnot Exists.</td>
+                {% endif %}
+            </tr>
+            
+            
+            
+            <tr>
+                <th>Answer For  Given Assignment</th>
+                {% if correct_data %}
+                <td><a href="{{correct_data.correct_answer.url}}" target="_blank">Click here to download answer</a></td>
+                {%else%}
+                <td>Your Teacher has not uploaded correct answer</td>
+                {% endif %}
+            </tr>
+            
+            {% if  review_on_submission %}
+                <tr>
+                    <th>Check Status</th>
+                    <td>{{review_on_submission.checked_status}}</td>
+                </tr>
+                <tr>
+                    <th>Checked By</th>
+                    <td>{{review_on_submission.checked_by}}</td>
+                </tr>
+                <tr>
+                    <th>Checked On</th>
+                    <td>{{review_on_submission.checked_date}}</td>
+                </tr>
+                <tr>
+                    <th>All Correct?</th>
+                    <td>{{review_on_submission.correct_status}}</td>
+                </tr>
+                <tr>
+                    <th>Reviews</th>
+                    <td>{{review_on_submission.suggestion_for_wrong}}</td>
+                </tr>
+            {% else %}
+            <tr>
+                <th>Check Status</th>
+                <td>Not Checked</td>
+            </tr>
+            {% endif %}
+                
+
+        </table>
+        
+
+       
+        
+
+    </div>
+</div>
+
+
+{% endblock profcontent %}
+
+
+

@@ -3,7 +3,7 @@ from . import views
 urlpatterns = [
     path('',views.dashboard,name="dashboard"),
     path('login/',views.signin,name="signin"),
-    path('register/',views.signup,name="signup"),
+    # path('register/',views.signup,name="signup"),
     path('signout/',views.signout,name="signout"),
     path('profile/',views.profile,name="profile"),
     path('404notFound/',views.page_not_found,name="404error"),
@@ -17,11 +17,14 @@ urlpatterns = [
     path('intoassignment',views.IntoAssignment,name="intoassignment"),
     path('assigntask/<int:id>',views.assigntask,name="assigntask"),
     path('viewassignment/<int:id>',views.viewassignment,name="viewassignment"),
-    path('submitassignment/<int:id>',views.submitassignment,name="submitassignment"),
-    path('editsubmission/<int:id>',views.editsubmission,name="editsubmission"),
+    path('editassignment/<int:id>',views.editassignment,name="editassignment"),
+    path('submitassignment/<int:sub_id>/<int:id>',views.submitassignment,name="submitassignment"),
+    path('editsubmission/<int:sub_id>/<int:id>/<int:submission_id>',views.editsubmission,name="editsubmission"),
     path('prevassignedtask/<int:id>',views.prevassignedtask,name="prevassignedtask"),
+    path("prevassignedtaskdetail/<int:sub_id>/<int:ass_id>",views.prev_assigned_task_detail,name="prevassignedtaskdetail"),
     path('viewsubmission/<int:id>',views.viewsubmission,name="viewsubmission"),
-    path('checkassignment/<int:id>',views.checkassignment,name="checkassignment"),
+    path('checkassignment/<int:ass_id>/<int:sub_id>',views.checkassignment,name="checkassignment"),
     path('submitanswers/<int:sub_id>/<int:ass_id>',views.CorrectAnswerSubmission,name="submitanswers"),
+    
     # path('readpdf/<str:url>',views.show_pdf,name="readpdf"),
 ]

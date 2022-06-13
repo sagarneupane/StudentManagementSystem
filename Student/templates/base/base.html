@@ -18,12 +18,21 @@
         
     {% block link %}{% endblock link %}
     {% include 'base/link.html' %}
+    {% load bootstrap4 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript jquery='full' %}
+    {{ form.media }}
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/popper.js' %}"></script>
+
+    
 
 </head>
 <body>
     <!-- Heading Of the  Main Webpage-->
     <div class="container-fluid baseheading">
-        <h1 class="display-2">Welcome to Student Management System</h1>
+        <h1 class="display-2">Welcome to Assignment Management System</h1>
     </div>
     <!-- End of the Heading Of the Page -->    
 
@@ -41,8 +50,6 @@
     </div> 
      <!-- End of the footer of the page -->
 
-     <script src="{% static 'js/bootstrap.min.js' %}"></script>
-     <script src="{% static 'js/popper.js' %}"></script>
-     <script src="{% static 'js/jquery.js' %}"></script>
+
 </body>
 </html>
